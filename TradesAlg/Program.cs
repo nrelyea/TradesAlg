@@ -76,7 +76,8 @@ class Program
                 if (IsTradePossible(trade, inventoryDict))  // if trade is immediately possible, return true
                 {
                     Console.WriteLine($"Trade possible for {targetItemName}:");
-                    PrintTrade(trade);
+                    //PrintTrade(trade);
+                    Console.WriteLine(TradeToStringSummary(trade));
                     return true;
                 }
                 else   // otherwise determine if trade is possible via other connected trades
@@ -93,7 +94,8 @@ class Program
                     if(tradePossibleViaAnother)
                     {
                         Console.WriteLine($"Trade possible for {targetItemName} via its other trades:");
-                        PrintTrade(trade);
+                        //PrintTrade(trade);
+                        Console.WriteLine(TradeToStringSummary(trade));
                         return true;
                     }
                 }
@@ -157,6 +159,25 @@ class Program
         return JArray.Parse(jsonContent);
     }
 
+
+
+    static string TradeToStringSummary(JObject trade)
+    {
+        List<string> costList = new List<string>();
+        List<string> resultList = new List<string>();
+
+        foreach (JObject item in trade["cost"])
+        {
+            costList.Add((string)item["name"]);
+        }
+        foreach (JObject item in trade["result"])
+        {
+            resultList.Add((string)item["name"]);
+        }
+
+        return $"{(string)trade["category"]} {string.Join(", ", costList)} for {string.Join(", ", resultList)}";
+
+    }
 
 
     static void PrintTrade(JObject trade)
