@@ -9,11 +9,14 @@ class Program
 {
     static void Main(string[] args)
     {
+        // Path to Program.cs class
+        string programDir = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..");
+
         // Load Trades data
-        JArray tradesArray = LoadJArray("trades.json");
+        JArray tradesArray = LoadJArray(Path.Combine(programDir, "tradesSample.json"));
 
         // Load Inventory data
-        JArray inventoryArray = LoadJArray("inventory.json");
+        JArray inventoryArray = LoadJArray(Path.Combine(programDir, "inventorySample.json"));
 
         // Print Inventory
         Console.WriteLine("Inventory:");
@@ -26,7 +29,7 @@ class Program
         Dictionary<string, int> inventoryDict = InventoryJArrayToDictionary(inventoryArray);
 
         // set the target Item to find trades for
-        string targetName = "F";
+        string targetName = "Crossbow";
 
         // find all possible trades!
         List<List<JObject>> pathList = FindTrades(inventoryDict, tradesArray, targetName);
@@ -75,21 +78,20 @@ class Program
             {
                 if (IsTradePossible(trade, inventoryDict))  // if trade is immediately possible, return true
                 {
-                    Console.WriteLine($"--- Direct trade possible for {targetItemName} -> {TradeToStringSummary(trade)}");
-                    //PrintTrade(trade);                   
+                    //Console.WriteLine($"--- Direct trade possible for {targetItemName} -> {TradeToStringSummary(trade)}");                  
                     List<JObject> path = new List<JObject>();
                     path.Add(trade);
                     pathsFound.Add(path);
                 }
                 else   // otherwise determine if trade is possible via other connected trades
                 {
-                    Console.WriteLine($"--- Direct trade NOT possible for {targetItemName}... looking for indirect trades");
+                    //Console.WriteLine($"--- Direct trade NOT possible for {targetItemName}... looking for indirect trades");
                     List<List<List<JObject>>> pathListList = new List<List<List<JObject>>>();
                     
                     // for each cost Item for this trade, recursively call FindTrades on that item, and add the resulting list to the <<<List>>> pathListList
                     foreach (var costItem in trade["cost"])
                     {
-                        Console.WriteLine($"--- Checking trades for {targetItemName} cost item {costItem.Value<string>("name")}");
+                        //Console.WriteLine($"--- Checking trades for {targetItemName} cost item {costItem.Value<string>("name")}");
                         List<List<JObject>> costItemTrades = FindTrades(inventoryDict, trades, costItem.Value<string>("name"));
                         if (costItemTrades != null)
                         {
@@ -103,7 +105,6 @@ class Program
                     // add the current trade to the start of each path in the indirect path list
                     foreach (List<JObject> path in indirectPaths)
                     {
-                        //path.Insert(0, trade);
                         path.Add(trade);
                     }
 

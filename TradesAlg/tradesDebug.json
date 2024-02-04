@@ -1,0 +1,149 @@
+[
+  {
+    "category": "Sell",
+    "cost": [
+      {
+        "name": "A",
+        "quantity": 1
+      }
+    ],
+    "result": [
+      {
+        "name": "B",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "category": "Sell",
+    "cost": [
+      {
+        "name": "A",
+        "quantity": 1
+      }
+    ],
+    "result": [
+      {
+        "name": "C",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "category": "Sell",
+    "cost": [
+      {
+        "name": "D",
+        "quantity": 1
+      }
+    ],
+    "result": [
+      {
+        "name": "B",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "category": "Sell",
+    "cost": [
+      {
+        "name": "D",
+        "quantity": 1
+      }
+    ],
+    "result": [
+      {
+        "name": "C",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "category": "Craft",
+    "cost": [
+      {
+        "name": "B",
+        "quantity": 1
+      },
+      {
+        "name": "C",
+        "quantity": 1
+      }
+    ],
+    "result": [
+      {
+        "name": "E",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "category": "Sell",
+    "cost": [
+      {
+        "name": "E",
+        "quantity": 1
+      }
+    ],
+    "result": [
+      {
+        "name": "F",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "category": "Sell",
+    "cost": [
+      {
+        "name": "B",
+        "quantity": 1
+      }
+    ],
+    "result": [
+      {
+        "name": "G",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "category": "Recycle",
+    "cost": [
+      {
+        "name": "G",
+        "quantity": 1
+      }
+    ],
+    "result": [
+      {
+        "name": "H",
+        "quantity": 1
+      },
+      {
+        "name": "I",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "category": "Craft",
+    "cost": [
+      {
+        "name": "H",
+        "quantity": 1
+      },
+      {
+        "name": "I",
+        "quantity": 1
+      }
+    ],
+    "result": [
+      {
+        "name": "J",
+        "quantity": 1
+      }
+    ]
+  }
+]

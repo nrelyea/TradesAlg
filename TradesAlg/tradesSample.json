@@ -1,0 +1,108 @@
+[
+  {
+    "category": "Craft",
+    "cost": [
+      {
+        "name": "Wood",
+        "quantity": 200
+      },
+      {
+        "name": "Metal Fragments",
+        "quantity": 75
+      },
+      {
+        "name": "Rope",
+        "quantity": 2
+      }
+    ],
+    "result": [
+      {
+        "name": "Crossbow",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "category": "Sell",
+    "cost": [
+      {
+        "name": "Scrap",
+        "quantity": 40
+      }
+    ],
+    "result": [
+      {
+        "name": "Tactical Gloves",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "category": "Recycle",
+    "cost": [
+      {
+        "name": "Tactical Gloves",
+        "quantity": 1
+      }
+    ],
+    "result": [
+      {
+        "name": "Leather",
+        "quantity": 10
+      },
+      {
+        "name": "Sewing Kit",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "category": "Recycle",
+    "cost": [
+      {
+        "name": "Sewing Kit",
+        "quantity": 1
+      }
+    ],
+    "result": [
+      {
+        "name": "Cloth",
+        "quantity": 10
+      },
+      {
+        "name": "Rope",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "category": "Sell",
+    "cost": [
+      {
+        "name": "Scrap",
+        "quantity": 20
+      }
+    ],
+    "result": [
+      {
+        "name": "Wood",
+        "quantity": 1000
+      }
+    ]
+  },
+  {
+    "category": "Sell",
+    "cost": [
+      {
+        "name": "Scrap",
+        "quantity": 25
+      }
+    ],
+    "result": [
+      {
+        "name": "Metal Fragments",
+        "quantity": 250
+      }
+    ]
+  }
+]
