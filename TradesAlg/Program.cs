@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection.Metadata.Ecma335;
 
 class Program
 {
@@ -27,20 +28,30 @@ class Program
             Console.WriteLine($"{item["Name"]}: {item["Quantity"]}");
         }
 
-        string targetName = "E";
-        PathToAcquireItem(inventoryArray, tradesArray, targetName);
+        // convert Inventory into a dictionary for easier checks
+        Dictionary<string, int> inventoryDict = InventoryJArrayToDictionary(inventoryArray);
 
-        //if (path.Count > 0)
-        //{
-        //    Console.WriteLine($"\nPath to acquire {targetName}: {string.Join(" -> ", path)}");
-        //} 
-        //else
-        //{
-        //    Console.WriteLine($"\nNo paths exist to acquire {targetName}"  );
-        //}
+        // set the target Item to find trades for
+        string targetName = "F";
+
+        // find all possible trades!
+        List<List<JObject>> pathList = FindTrades(inventoryDict, tradesArray, targetName);
+
+        if(pathList.Count > 0)
+        {
+            Console.WriteLine("\nTrade is possible!\n");
+            PrintPathList(pathList);
+        }
+        else
+        {
+            Console.WriteLine("\nTrade is NOT possible.");
+        }
 
 
 
+
+
+        /*
         List<List<List<string>>> testPathPathList = new List<List<List<string>>>();
 
         List<List<string>> firstPathList = new List<List<string>>();
@@ -61,7 +72,7 @@ class Program
 
 
         PrintStringListLists(CombineAndConsolidateAllPossibleAltPathLists(testPathPathList));
-
+        */
 
 
 
@@ -77,26 +88,15 @@ class Program
 
     }
 
-    public static void PathToAcquireItem(JArray inventory, JArray trades, string targetItemName)
+    private static List<List<JObject>> PathsToAcquireItem(JArray inventory, JArray trades, string targetItemName)
     {
-        List<string> path = new List<string>();
-
         Dictionary<string, int> inventoryDict = InventoryJArrayToDictionary(inventory); // convert Inventory JArray to Dictionary
 
-        //List<List<JObject>> pathsFound = FindTrades(inventoryDict, trades, targetItemName);
-
-        //if (pathsFound.Count > 0) Console.WriteLine("TRADE WORKS BOYYYYYYYY");
-
-        //return path;
+        return FindTrades(inventoryDict, trades, targetItemName);
     }
 
-    /*public static List<List<JObject>> FindTrades(Dictionary<string, int> inventoryDict, JArray trades, string targetItemName, List<JObject> currentPath = null)
-    {
-        if (currentPath == null)
-        {
-            currentPath = new List<JObject>();  
-        }
-        
+    private static List<List<JObject>> FindTrades(Dictionary<string, int> inventoryDict, JArray trades, string targetItemName)
+    {       
         JArray targetTrades = new JArray { };
         foreach (JObject trade in trades)   // find all trades that result in the current target item
         {
@@ -109,66 +109,88 @@ class Program
                 }
             }
         }
+      
+        List<List<JObject>> pathsFound = new List<List<JObject>>();
 
-        if(targetTrades.Count > 0)  // if there is at least one immediate trade available for the target item in question
+        if(targetTrades.Count > 0)  // if at least one trade is possible for the target item in question
         {
             foreach (JObject trade in targetTrades)
             {
                 if (IsTradePossible(trade, inventoryDict))  // if trade is immediately possible, return true
                 {
-                    Console.WriteLine($"Trade possible for {targetItemName}:");
+                    Console.WriteLine($"--- Direct trade possible for {targetItemName} -> {TradeToStringSummary(trade)}");
                     //PrintTrade(trade);                   
-                    return true;
+                    List<JObject> path = new List<JObject>();
+                    path.Add(trade);
+                    pathsFound.Add(path);
                 }
                 else   // otherwise determine if trade is possible via other connected trades
                 {
-                    bool tradePossibleViaAnother = true;    // Remains true if all other trades related to the base item for this one can be traded for using target item
+                    Console.WriteLine($"--- Direct trade NOT possible for {targetItemName}... looking for indirect trades");
+                    List<List<List<JObject>>> pathListList = new List<List<List<JObject>>>();
+                    
+                    // for each cost Item for this trade, recursively call FindTrades on that item, and add the resulting list to the <<<List>>> pathListList
                     foreach (var costItem in trade["cost"])
                     {
-                        if(!FindTrades(inventoryDict, trades, costItem.Value<string>("name")))
+                        Console.WriteLine($"--- Checking trades for {targetItemName} cost item {costItem.Value<string>("name")}");
+                        List<List<JObject>> costItemTrades = FindTrades(inventoryDict, trades, costItem.Value<string>("name"));
+                        if (costItemTrades != null)
                         {
-                            tradePossibleViaAnother = false;
+                            pathListList.Add(costItemTrades);
                         }
                     }
 
-                    if(tradePossibleViaAnother)
+                    // find all potential combinations of paths leading to the above costItems, and add any/all found to the pathsFound list
+                    List<List<JObject>> indirectPaths = CombineAndConsolidateAllPossibleAltPathLists(pathListList);
+
+                    // add the current trade to the start of each path in the indirect path list
+                    foreach (List<JObject> path in indirectPaths)
                     {
-                        Console.WriteLine($"Trade possible for {targetItemName} via its other trades:");
-                        //PrintTrade(trade);
-                        return true;
+                        //path.Insert(0, trade);
+                        path.Add(trade);
                     }
+
+                    // add final set of indirect paths from this trade to the pathsFound list
+                    pathsFound.AddRange(indirectPaths);
                 }
             }
         }
         else
         {
-            return false;   // no immediate trades available for the target item
+            Console.WriteLine($"--- No trades possible for {targetItemName}");
+            return null;   // no trades exist for the target item
         }
 
-        return false;
-    }*/
+        return pathsFound;
+    }
 
-    private static List<List<string>> CombineAndConsolidateAllPossibleAltPathLists(List<List<List<string>>> pathListList)
+    private static List<List<JObject>> CombineAndConsolidateAllPossibleAltPathLists(List<List<List<JObject>>> pathListList)
     {
-        // base case, if only one path in pathListList, return that path list alone in the 
-        List<List<string>> firstPathList = (pathListList.First()).ToList();
+        // base case for empty list:
+        if (pathListList.Count == 0)
+        {
+            return new List<List<JObject>> { };
+        }
+
+        // base case for 1 element: if only one path in pathListList, return that path list alone in the <<List>>
+        List<List<JObject>> firstPathList = (pathListList.First()).ToList();
         if(pathListList.Count <= 1)  
         {
             return firstPathList;
         }
 
         // recursively call this method on the remainder of pathLists in the pathListList
-        List<List<string>> remainderPathList = CombineAndConsolidateAllPossibleAltPathLists(pathListList.Skip(1).ToList());
+        List<List<JObject>> remainderPathList = CombineAndConsolidateAllPossibleAltPathLists(pathListList.Skip(1).ToList());
 
-        List<List<string>> consolidatedPathList = new List<List<string>>();
+        List<List<JObject>> consolidatedPathList = new List<List<JObject>>();
 
         // combine firstPathList and remainderPathList into one list based on all possible combinations between the lists
 
-        foreach (List<string> pathA in firstPathList)
+        foreach (List<JObject> pathA in firstPathList)
         {
-            foreach(List<string> pathB in remainderPathList)
+            foreach(List<JObject> pathB in remainderPathList)
             {
-                List<string> combinedList = pathA.Concat(pathB).ToList();
+                List<JObject> combinedList = pathA.Concat(pathB).ToList();
                 consolidatedPathList.Add(combinedList);
             }
         }
@@ -247,6 +269,18 @@ class Program
         return JArray.Parse(jsonContent);
     }
 
+    private static void PrintPathList(List<List<JObject>> pathList)
+    {       
+        foreach (List<JObject> path in pathList)
+        {
+            List<string> strList = new List<string>();
+            foreach (JObject trade in path)
+            {
+                strList.Add(TradeToStringSummary(trade));
+            }
+            Console.WriteLine($"Trade Path: {string.Join(" -> ", strList)}");
+        }      
+    }
 
 
     static string TradeToStringSummary(JObject trade)
