@@ -12,12 +12,6 @@ class Program
         // Load Trades data
         JArray tradesArray = LoadJArray("trades.json");
 
-        // Print trades
-        //foreach (JObject trade in tradesArray)
-        //{
-        //    PrintTrade(trade);
-        //}
-
         // Load Inventory data
         JArray inventoryArray = LoadJArray("inventory.json");
 
@@ -51,48 +45,11 @@ class Program
 
 
 
-        /*
-        List<List<List<string>>> testPathPathList = new List<List<List<string>>>();
-
-        List<List<string>> firstPathList = new List<List<string>>();
-        firstPathList.Add(new List<string> { "A1", "A2", "A3" });
-        firstPathList.Add(new List<string> { "B1", "B2", "B3" });
-        testPathPathList.Add(firstPathList);
-
-        List<List<string>> secondPathList = new List<List<string>>();
-        secondPathList.Add(new List<string> { "C1", "C2", "C3" });
-        secondPathList.Add(new List<string> { "D1", "D2", "D3" });
-        testPathPathList.Add(secondPathList);
-
-        List<List<string>> thirdPathList = new List<List<string>>();
-        thirdPathList.Add(new List<string> { "E1", "E2", "E3" });
-        thirdPathList.Add(new List<string> { "F1", "F2", "F3" });
-        testPathPathList.Add(thirdPathList);
-
-
-
-        PrintStringListLists(CombineAndConsolidateAllPossibleAltPathLists(testPathPathList));
-        */
 
 
 
 
 
-
-
-
-
-
-
-
-
-    }
-
-    private static List<List<JObject>> PathsToAcquireItem(JArray inventory, JArray trades, string targetItemName)
-    {
-        Dictionary<string, int> inventoryDict = InventoryJArrayToDictionary(inventory); // convert Inventory JArray to Dictionary
-
-        return FindTrades(inventoryDict, trades, targetItemName);
     }
 
     private static List<List<JObject>> FindTrades(Dictionary<string, int> inventoryDict, JArray trades, string targetItemName)
@@ -198,27 +155,6 @@ class Program
         return consolidatedPathList;
     }
 
-    private static bool ListsContainSameStrings(List<string> list1, List<string> list2)
-    {
-        if(list1.Count != list2.Count) { return false; }
-        
-        foreach (string str in list1)
-        {
-            if(!list2.Contains(str)) return false;
-        }
-
-        return true;
-    }
-
-    private static void PrintStringListLists(List<List<string>> lstlst)
-    {
-        Console.WriteLine($"Collected {lstlst.Count} paths:");
-        foreach (List<string> list in lstlst)
-        {
-            Console.WriteLine(string.Join(", ", list));
-        }
-    }
-
     static bool IsTradePossible(JObject trade, Dictionary<string, int> inventoryDict)
     {
         foreach(var costItem in trade["cost"])
@@ -299,22 +235,5 @@ class Program
 
         return $"{(string)trade["category"]} {string.Join(", ", costList)} for {string.Join(", ", resultList)}";
 
-    }
-
-
-    static void PrintTrade(JObject trade)
-    {
-        Console.WriteLine("\nTrade:");
-        Console.Write(" Cost:  ");
-        foreach (JObject item in trade["cost"])
-        {
-            Console.Write($"   {item["name"]}: {item["quantity"]}");
-        }
-        Console.Write("\n Result:");
-        foreach (JObject item in trade["result"])
-        {
-            Console.Write($"   {item["name"]}: {item["quantity"]}");
-        }
-        Console.WriteLine("");
     }
 }
