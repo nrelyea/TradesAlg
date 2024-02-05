@@ -55,8 +55,17 @@ class Program
 
     }
 
-    private static List<List<JObject>> FindTrades(Dictionary<string, int> inventoryDict, JArray trades, string targetItemName)
+    private static List<List<JObject>> FindTrades(Dictionary<string, int> inventoryDict, JArray trades, string targetItemName, List<string> analyzedTargetItems = null)
     {       
+        // start tracking already analyzed target items if needed
+        if(analyzedTargetItems == null)
+        {
+            analyzedTargetItems = new List<string>();
+        }
+
+        // add current target item to list of those already analyzed
+        analyzedTargetItems.Add(targetItemName);
+        
         JArray targetTrades = new JArray { };
         foreach (JObject trade in trades)   // find all trades that result in the current target item
         {
@@ -91,12 +100,18 @@ class Program
                     // for each cost Item for this trade, recursively call FindTrades on that item, and add the resulting list to the <<<List>>> pathListList
                     foreach (var costItem in trade["cost"])
                     {
+                        string costItemName = costItem.Value<string>("name");
                         //Console.WriteLine($"--- Checking trades for {targetItemName} cost item {costItem.Value<string>("name")}");
-                        List<List<JObject>> costItemTrades = FindTrades(inventoryDict, trades, costItem.Value<string>("name"));
-                        if (costItemTrades != null)
+
+                        // only consider trades for that cost item if it has not yet been analyzed as a target item
+                        if (!analyzedTargetItems.Contains(costItemName))
                         {
-                            pathListList.Add(costItemTrades);
-                        }
+                            List<List<JObject>> costItemTrades = FindTrades(inventoryDict, trades, costItemName, analyzedTargetItems);
+                            if (costItemTrades != null)
+                            {
+                                pathListList.Add(costItemTrades);
+                            }
+                        }                       
                     }
 
                     // find all potential combinations of paths leading to the above costItems, and add any/all found to the pathsFound list
