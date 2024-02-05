@@ -62,9 +62,6 @@ class Program
         {
             analyzedTargetItems = new List<string>();
         }
-
-        // add current target item to list of those already analyzed
-        analyzedTargetItems.Add(targetItemName);
         
         JArray targetTrades = new JArray { };
         foreach (JObject trade in trades)   // find all trades that result in the current target item
@@ -103,10 +100,16 @@ class Program
                         string costItemName = costItem.Value<string>("name");
                         //Console.WriteLine($"--- Checking trades for {targetItemName} cost item {costItem.Value<string>("name")}");
 
+                        // create a new list including the current target item and already analyzed target items to pass to the recurssive FindTrades call
+                        List<string> updatedAnalyzedTargetItems = new List<string> { targetItemName };
+                        updatedAnalyzedTargetItems.AddRange(analyzedTargetItems);
+
+                        //Console.WriteLine("Already checked trades for: " + string.Join(", ", updatedAnalyzedTargetItems));
+
                         // only consider trades for that cost item if it has not yet been analyzed as a target item
                         if (!analyzedTargetItems.Contains(costItemName))
                         {
-                            List<List<JObject>> costItemTrades = FindTrades(inventoryDict, trades, costItemName, analyzedTargetItems);
+                            List<List<JObject>> costItemTrades = FindTrades(inventoryDict, trades, costItemName, updatedAnalyzedTargetItems);
                             if (costItemTrades != null)
                             {
                                 pathListList.Add(costItemTrades);

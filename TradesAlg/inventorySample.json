@@ -5,14 +5,10 @@
   },
   {
     "Name": "Sewing Kit",
-    "Quantity": 9999
+    "Quantity": 0
   },
   {
     "Name": "Wood",
-    "Quantity": 0
-  },
-  {
-    "Name": "G",
-    "Quantity": 0
+    "Quantity": 9999
   }
 ]
