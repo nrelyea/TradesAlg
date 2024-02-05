@@ -3,6 +3,7 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
 
 class Program
@@ -13,10 +14,10 @@ class Program
         string programDir = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..");
 
         // Load Trades data
-        JArray tradesArray = LoadJArray(Path.Combine(programDir, "tradesSample.json"));
+        JArray tradesArray = LoadJArray(Path.Combine(programDir, "tradesDebug.json"));
 
         // Load Inventory data
-        JArray inventoryArray = LoadJArray(Path.Combine(programDir, "inventorySample.json"));
+        JArray inventoryArray = LoadJArray(Path.Combine(programDir, "inventoryDebug.json"));
 
         // Print Inventory
         Console.WriteLine("Inventory:");
@@ -29,10 +30,13 @@ class Program
         Dictionary<string, int> inventoryDict = InventoryJArrayToDictionary(inventoryArray);
 
         // set the target Item to find trades for
-        string targetName = "Crossbow";
+        string targetName = "J";
 
         // find all possible trades!
         List<List<JObject>> pathList = FindTrades(inventoryDict, tradesArray, targetName);
+
+        // Remove duplicate / redundant steps in paths
+        pathList = RemoveDuplicateSteps(pathList);
 
         if(pathList.Count > 0)
         {
@@ -53,6 +57,39 @@ class Program
 
 
 
+    }
+
+    private static List<List<JObject>> RemoveDuplicateSteps(List<List<JObject>> pathList)
+    {
+        List<List<JObject>> distinctPathList = new List<List<JObject>>();
+        
+        foreach(List<JObject> path in pathList)
+        {
+            List<JObject> distinctPath = new List<JObject>();
+            
+            foreach(JObject trade in path)
+            {
+                bool isDistinctTrade = true;
+                
+                foreach (JObject distinctTrade in distinctPath)
+                {
+                    if(TradeToStringSummary(trade) == TradeToStringSummary(distinctTrade))
+                    {
+                        isDistinctTrade = false;
+                        break;
+                    }
+                }
+
+                if (isDistinctTrade)
+                {
+                    distinctPath.Add(trade);
+                }
+            }
+
+            distinctPathList.Add(distinctPath);
+        }
+
+        return distinctPathList;
     }
 
     private static List<List<JObject>> FindTrades(Dictionary<string, int> inventoryDict, JArray trades, string targetItemName, List<string> analyzedTargetItems = null)
@@ -101,7 +138,7 @@ class Program
                         //Console.WriteLine($"--- Checking trades for {targetItemName} cost item {costItem.Value<string>("name")}");
 
                         // create a new list including the current target item and already analyzed target items to pass to the recurssive FindTrades call
-                        List<string> updatedAnalyzedTargetItems = new List<string> { targetItemName };
+                        List<string> updatedAnalyzedTargetItems = new List<string> { targetItemName }; 
                         updatedAnalyzedTargetItems.AddRange(analyzedTargetItems);
 
                         //Console.WriteLine("Already checked trades for: " + string.Join(", ", updatedAnalyzedTargetItems));
