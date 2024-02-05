@@ -14,10 +14,10 @@ class Program
         string programDir = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..");
 
         // Load Trades data
-        JArray tradesArray = LoadJArray(Path.Combine(programDir, "tradesDebug.json"));
+        JArray tradesArray = LoadJArray(Path.Combine(programDir, "tradesSample.json"));
 
         // Load Inventory data
-        JArray inventoryArray = LoadJArray(Path.Combine(programDir, "inventoryDebug.json"));
+        JArray inventoryArray = LoadJArray(Path.Combine(programDir, "inventorySample.json"));
 
         // Print Inventory
         Console.WriteLine("Inventory:");
@@ -30,7 +30,7 @@ class Program
         Dictionary<string, int> inventoryDict = InventoryJArrayToDictionary(inventoryArray);
 
         // set the target Item to find trades for
-        string targetName = "J";
+        string targetName = "Crossbow";
 
         // find all possible trades!
         List<List<JObject>> pathList = FindTrades(inventoryDict, tradesArray, targetName);
@@ -142,6 +142,13 @@ class Program
                         updatedAnalyzedTargetItems.AddRange(analyzedTargetItems);
 
                         //Console.WriteLine("Already checked trades for: " + string.Join(", ", updatedAnalyzedTargetItems));
+
+                        // skip recurssive FindTrades call for this cost item if it is already in the inventory
+                        if (inventoryDict.ContainsKey(costItemName) && inventoryDict[costItemName] > 0)
+                        {
+                            //Console.WriteLine($"--- Inventory contains {costItemName}, skipping further search for trades on this item");
+                            continue;
+                        }                        
 
                         // only consider trades for that cost item if it has not yet been analyzed as a target item
                         if (!analyzedTargetItems.Contains(costItemName))

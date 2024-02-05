@@ -10,5 +10,13 @@
   {
     "Name": "Wood",
     "Quantity": 9999
+  },
+  {
+    "Name": "Metal Fragments",
+    "Quantity": 0
+  },
+  {
+    "Name": "Rope",
+    "Quantity": 0
   }
 ]
