@@ -134,5 +134,62 @@
         "quantity": 500
       }
     ]
+  },
+  {
+    "category": "Craft",
+    "cost": [
+      {
+        "name": "Wood",
+        "quantity": 100
+      },
+      {
+        "name": "Metal Fragments",
+        "quantity": 75
+      }
+    ],
+    "result": [
+      {
+        "name": "Hatchet",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "category": "Recycle",
+    "cost": [
+      {
+        "name": "F1 Grenade",
+        "quantity": 1
+      }
+    ],
+    "result": [
+      {
+        "name": "Gunpowder",
+        "quantity": 15
+      },
+      {
+        "name": "Metal Fragments",
+        "quantity": 13
+      }
+    ]
+  },
+  {
+    "category": "Craft",
+    "cost": [
+      {
+        "name": "Metal Fragments",
+        "quantity": 10
+      },
+      {
+        "name": "Gunpowder",
+        "quantity": 5
+      }
+    ],
+    "result": [
+      {
+        "name": "Pistol Bullet",
+        "quantity": 4
+      }
+    ]
   }
 ]

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Reflection.Metadata.Ecma335;
+using TradesAlg;
 
 class Program
 {
@@ -30,7 +31,8 @@ class Program
         Dictionary<string, int> inventoryDict = InventoryJArrayToDictionary(inventoryArray);
 
         // set the target Item to find trades for
-        string targetName = "Crossbow";
+        string targetName = "Pistol Bullet";
+        int targetAmount = 1;
 
         // find all possible trades!
         List<List<JObject>> pathList = FindTrades(inventoryDict, tradesArray, targetName);
@@ -47,6 +49,10 @@ class Program
         {
             Console.WriteLine("\nTrade is NOT possible.");
         }
+
+        // Determine up front costs of each trade path as a dictionary of cost items and their amount
+        PathListAnalysis pla = new PathListAnalysis();
+        List<Dictionary<string, int>> upfrontCostList = pla.UpfrontCosts(pathList, targetName, targetAmount);
 
 
 

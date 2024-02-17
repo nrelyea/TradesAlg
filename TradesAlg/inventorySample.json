@@ -1,7 +1,7 @@
 [
   {
     "Name": "Scrap",
-    "Quantity": 9999
+    "Quantity": 0
   },
   {
     "Name": "Sewing Kit",
@@ -9,7 +9,7 @@
   },
   {
     "Name": "Wood",
-    "Quantity": 9999
+    "Quantity": 0
   },
   {
     "Name": "Metal Fragments",
@@ -18,5 +18,9 @@
   {
     "Name": "Rope",
     "Quantity": 0
+  },
+  {
+    "Name": "F1 Grenade",
+    "Quantity": 9999
   }
 ]
