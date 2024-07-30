@@ -13,11 +13,11 @@ namespace TradesAlg
     public class PLA2_Node
     {
         public string ItemName;
-        JObject VitalTrade;
+        Trade VitalTrade;
         List<PLA2_Node> VitalTradeCostNodes;
         PLA2_Node ChildNode;
         
-        public PLA2_Node(string itemName, PLA2_Node childNode, List<JObject> path, List<string> sourceItems)
+        public PLA2_Node(string itemName, PLA2_Node childNode, List<Trade> path, List<string> sourceItems)
         {
             ItemName = itemName;
 
@@ -29,7 +29,7 @@ namespace TradesAlg
 
             VitalTrade = DetermineVitalTrade(path, sourceItems);
 
-            Console.WriteLine($"Vital trade for '{ItemName}': {TradeToStringSummary(VitalTrade)}");
+            if(VitalTrade != null) Console.WriteLine($"Vital trade for '{ItemName}': {VitalTrade.StringSummary()}");
 
             VitalTradeCostNodes = DetermineAndCreateVitalTradeCostNodes(path, sourceItems);
 
@@ -37,7 +37,7 @@ namespace TradesAlg
             
         }
 
-        private JObject DetermineVitalTrade(List<JObject> path, List<string> sourceItems)
+        private Trade DetermineVitalTrade(List<Trade> path, List<string> sourceItems)
         {
             if (sourceItems.Contains(ItemName))
             {
@@ -48,10 +48,10 @@ namespace TradesAlg
             {
                 for(int i = path.Count - 1; i >= 0; i--)
                 {
-                    JObject trade = path[i];
-                    foreach (JObject item in trade["result"])
+                    Trade trade = path[i];
+                    foreach (Item item in trade.ResultItems)
                     {
-                        if((string)item["name"] == ItemName)
+                        if(item.Name == ItemName)
                         {
                             return trade;
                         }
@@ -62,15 +62,15 @@ namespace TradesAlg
             return null;
         }
 
-        private List<PLA2_Node> DetermineAndCreateVitalTradeCostNodes(List<JObject> path, List<string> sourceItems)
+        private List<PLA2_Node> DetermineAndCreateVitalTradeCostNodes(List<Trade> path, List<string> sourceItems)
         {
             if(VitalTrade == null) { return null; }
             
             List<PLA2_Node> vitalTradeCostNodes = new List<PLA2_Node>();
 
-            foreach (var costItem in VitalTrade["cost"])
+            foreach (Item costItem in VitalTrade.CostItems)
             {
-                string costItemName = costItem.Value<string>("name");
+                string costItemName = costItem.Name;
                 Console.WriteLine($"Adding '{costItemName}' as a Vital Trade Cost Item for '{ItemName}'");
                 PLA2_Node costNode = new PLA2_Node(costItemName, this, path, sourceItems);
                 vitalTradeCostNodes.Add(costNode);

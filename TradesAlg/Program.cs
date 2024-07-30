@@ -15,14 +15,15 @@ class Program
         string programDir = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..");
 
         // Load Trades data
-        //JArray tradesArray = LoadJArray(Path.Combine(programDir, "tradesDebug.json"));
-        List<Trade> allTradesList = LoadTradesList(Path.Combine(programDir, "tradesDebug.json"));
-        
+        //List<Trade> allTradesList = LoadTradesList(Path.Combine(programDir, "tradesDebug.json"));
+        List<Trade> allTradesList = LoadTradesList(Path.Combine(programDir, "tradesSample.json"));
+
         // Load Inventory data
-        Dictionary<string, int> inventoryDict = LoadInventory(Path.Combine(programDir, "inventoryDebug.json"));
+        //Dictionary<string, int> inventoryDict = LoadInventory(Path.Combine(programDir, "inventoryDebug.json"));
+        Dictionary<string, int> inventoryDict = LoadInventory(Path.Combine(programDir, "inventorySample.json"));
 
         // set the target Item to find trades for
-        string targetName = "J";
+        string targetName = "Cloth";
         int targetAmount = 1;
 
         
@@ -51,8 +52,8 @@ class Program
         //List<Dictionary<string, int>> upfrontCostList = pla.UpfrontCosts(pathList, targetName, targetAmount);
 
 
-        //PathListAnalysis2 pla2 = new PathListAnalysis2();
-        //List<Dictionary<string, int>> upfrontCostList = pla2.AllUpfrontCosts(inventoryDict, pathList, targetName, targetAmount);
+        PathListAnalysis2 pla2 = new PathListAnalysis2();
+        List<List<Item>> upfrontCostList = pla2.AllUpfrontCosts(inventoryDict, pathList, targetName, targetAmount);
 
 
 

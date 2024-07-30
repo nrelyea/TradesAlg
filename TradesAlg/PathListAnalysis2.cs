@@ -12,13 +12,14 @@ namespace TradesAlg
     {
         public PathListAnalysis2() { }
 
-        public List<Dictionary<string, int>> AllUpfrontCosts(Dictionary<string, int> inventoryDict, List<List<JObject>> pathList, string targetName, int targetAmount)
+        public List<List<Item>> AllUpfrontCosts(Dictionary<string, int> inventoryDict, List<List<Trade>> pathList, string targetName, int targetAmount)
         {
-            List<Dictionary<string, int>> upfrontCostList = new List<Dictionary<string, int>>();
+            List<List<Item>> upfrontCostList = new List<List<Item>>();
 
-            foreach (List<JObject> path in pathList)
+            for(int i = 0; i < pathList.Count; i++)
             {
-                upfrontCostList.Add(UpfrontCost(inventoryDict, path, targetName, targetAmount));
+                Console.WriteLine($"\nPath #{i+1}:");
+                upfrontCostList.Add(UpfrontCost(inventoryDict, pathList[i], targetName, targetAmount));
             }
 
             PrintUpfrontCostList(upfrontCostList);
@@ -27,11 +28,11 @@ namespace TradesAlg
 
         }
 
-        private Dictionary<string, int> UpfrontCost(Dictionary<string, int> inventoryDict, List<JObject> path, string targetName, int targetAmount)
+        private List<Item> UpfrontCost(Dictionary<string, int> inventoryDict, List<Trade> path, string targetName, int targetAmount)
         {
             Console.WriteLine($" --- Starting Cost analysis to procure {targetAmount} {targetName}...");
 
-            Dictionary<string, int> upfrontCost = new Dictionary<string, int>();
+            List<Item> upfrontCost = new List<Item>();
 
             Dictionary<string, int> activeInventory = new Dictionary<string, int>();
 
@@ -65,14 +66,14 @@ namespace TradesAlg
             return sourceItems;
         }
 
-        private void PrintUpfrontCostList(List<Dictionary<string, int>> upfrontCostList)
+        private void PrintUpfrontCostList(List<List<Item>> upfrontCostList)
         {
-            foreach (Dictionary<string, int> upfrontCost in upfrontCostList)
+            foreach (List<Item> upfrontCost in upfrontCostList)
             {
                 Console.WriteLine("Total upfront cost for this path:");
-                foreach (KeyValuePair<string, int> costPair in upfrontCost)
+                foreach (Item costPair in upfrontCost)
                 {
-                    Console.WriteLine($" - {upfrontCost[costPair.Key]} {costPair.Key}");
+                    Console.WriteLine($" - {costPair.Quantity} {costPair.Name}");
                 }
             }
         }
