@@ -60,6 +60,25 @@
     "category": "Recycle",
     "cost": [
       {
+        "name": "Jacket",
+        "quantity": 1
+      }
+    ],
+    "result": [
+      {
+        "name": "Cloth",
+        "quantity": 20
+      },
+      {
+        "name": "Sewing Kit",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "category": "Recycle",
+    "cost": [
+      {
         "name": "Sewing Kit",
         "quantity": 1
       }
@@ -72,6 +91,21 @@
       {
         "name": "Rope",
         "quantity": 2
+      }
+    ]
+  },
+  {
+    "category": "Recycle",
+    "cost": [
+      {
+        "name": "Rope",
+        "quantity": 1
+      }
+    ],
+    "result": [
+      {
+        "name": "Cloth",
+        "quantity": 12
       }
     ]
   },
@@ -155,6 +189,21 @@
     ]
   },
   {
+    "category": "Sell",
+    "cost": [
+      {
+        "name": "Scrap",
+        "quantity": 8
+      }
+    ],
+    "result": [
+      {
+        "name": "F1 Grenade",
+        "quantity": 1
+      }
+    ]
+  },
+  {
     "category": "Recycle",
     "cost": [
       {
@@ -165,11 +214,11 @@
     "result": [
       {
         "name": "Gunpowder",
-        "quantity": 15
+        "quantity": 12
       },
       {
         "name": "Metal Fragments",
-        "quantity": 13
+        "quantity": 10
       }
     ]
   },

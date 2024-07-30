@@ -15,10 +15,10 @@ class Program
         string programDir = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..");
 
         // Load Trades data
-        JArray tradesArray = LoadJArray(Path.Combine(programDir, "tradesSample.json"));
+        JArray tradesArray = LoadJArray(Path.Combine(programDir, "tradesDebug.json"));
 
         // Load Inventory data
-        JArray inventoryArray = LoadJArray(Path.Combine(programDir, "inventorySample.json"));
+        JArray inventoryArray = LoadJArray(Path.Combine(programDir, "inventoryDebug.json"));
 
         // Print Inventory
         Console.WriteLine("Inventory:");
@@ -31,8 +31,10 @@ class Program
         Dictionary<string, int> inventoryDict = InventoryJArrayToDictionary(inventoryArray);
 
         // set the target Item to find trades for
-        string targetName = "Pistol Bullet";
+        string targetName = "Z";
         int targetAmount = 1;
+
+
 
         // find all possible trades!
         List<List<JObject>> pathList = FindTrades(inventoryDict, tradesArray, targetName);
@@ -50,9 +52,16 @@ class Program
             Console.WriteLine("\nTrade is NOT possible.");
         }
 
+        Console.WriteLine("\n\n\n");
+
         // Determine up front costs of each trade path as a dictionary of cost items and their amount
-        PathListAnalysis pla = new PathListAnalysis();
-        List<Dictionary<string, int>> upfrontCostList = pla.UpfrontCosts(pathList, targetName, targetAmount);
+
+        //PathListAnalysis pla = new PathListAnalysis();
+        //List<Dictionary<string, int>> upfrontCostList = pla.UpfrontCosts(pathList, targetName, targetAmount);
+
+
+        PathListAnalysis2 pla2 = new PathListAnalysis2();
+        List<Dictionary<string, int>> upfrontCostList = pla2.AllUpfrontCosts(inventoryDict, pathList, targetName, targetAmount);
 
 
 

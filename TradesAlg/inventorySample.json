@@ -4,6 +4,10 @@
     "Quantity": 0
   },
   {
+    "Name": "Jacket",
+    "Quantity": 99
+  },
+  {
     "Name": "Sewing Kit",
     "Quantity": 0
   },
@@ -21,6 +25,6 @@
   },
   {
     "Name": "F1 Grenade",
-    "Quantity": 9999
+    "Quantity": 0
   }
 ]

@@ -1,7 +1,7 @@
 [
   {
     "Name": "A",
-    "Quantity": 9999
+    "Quantity": 0
   },
   {
     "Name": "D",
@@ -14,5 +14,13 @@
   {
     "Name": "G",
     "Quantity": 0
+  },
+  {
+    "Name": "Y",
+    "Quantity": 0
+  },
+  {
+    "Name": "W",
+    "Quantity": 9999
   }
 ]

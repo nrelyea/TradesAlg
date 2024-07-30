@@ -145,5 +145,77 @@
         "quantity": 1
       }
     ]
+  },
+  {
+    "category": "Recycle",
+    "cost": [
+      {
+        "name": "W",
+        "quantity": 1
+      }
+    ],
+    "result": [
+      {
+        "name": "X",
+        "quantity": 2
+      },
+      {
+        "name": "Y",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "category": "Craft",
+    "cost": [
+      {
+        "name": "X",
+        "quantity": 3
+      },
+      {
+        "name": "Y",
+        "quantity": 3
+      }
+    ],
+    "result": [
+      {
+        "name": "Z",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "category": "Craft",
+    "cost": [
+      {
+        "name": "L",
+        "quantity": 1
+      },
+      {
+        "name": "M",
+        "quantity": 2
+      }
+    ],
+    "result": [
+      {
+        "name": "N",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "category": "Sell",
+    "cost": [
+      {
+        "name": "N",
+        "quantity": 2
+      }
+    ],
+    "result": [
+      {
+        "name": "P",
+        "quantity": 1
+      }
+    ]
   }
 ]
