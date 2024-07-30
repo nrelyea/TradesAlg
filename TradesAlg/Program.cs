@@ -15,33 +15,24 @@ class Program
         string programDir = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..");
 
         // Load Trades data
-        JArray tradesArray = LoadJArray(Path.Combine(programDir, "tradesDebug.json"));
-
+        //JArray tradesArray = LoadJArray(Path.Combine(programDir, "tradesDebug.json"));
+        List<Trade> allTradesList = LoadTradesList(Path.Combine(programDir, "tradesDebug.json"));
+        
         // Load Inventory data
-        JArray inventoryArray = LoadJArray(Path.Combine(programDir, "inventoryDebug.json"));
-
-        // Print Inventory
-        Console.WriteLine("Inventory:");
-        foreach (JObject item in inventoryArray)
-        {
-            Console.WriteLine($"{item["Name"]}: {item["Quantity"]}");
-        }
-
-        // convert Inventory into a dictionary for easier checks
-        Dictionary<string, int> inventoryDict = InventoryJArrayToDictionary(inventoryArray);
+        Dictionary<string, int> inventoryDict = LoadInventory(Path.Combine(programDir, "inventoryDebug.json"));
 
         // set the target Item to find trades for
-        string targetName = "Z";
+        string targetName = "J";
         int targetAmount = 1;
 
-
+        
 
         // find all possible trades!
-        List<List<JObject>> pathList = FindTrades(inventoryDict, tradesArray, targetName);
-
+        List<List<Trade>> pathList = FindTrades(inventoryDict, allTradesList, targetName);
+        
         // Remove duplicate / redundant steps in paths
         pathList = RemoveDuplicateSteps(pathList);
-
+        
         if(pathList.Count > 0)
         {
             Console.WriteLine("\nTrade is possible!\n");
@@ -60,8 +51,8 @@ class Program
         //List<Dictionary<string, int>> upfrontCostList = pla.UpfrontCosts(pathList, targetName, targetAmount);
 
 
-        PathListAnalysis2 pla2 = new PathListAnalysis2();
-        List<Dictionary<string, int>> upfrontCostList = pla2.AllUpfrontCosts(inventoryDict, pathList, targetName, targetAmount);
+        //PathListAnalysis2 pla2 = new PathListAnalysis2();
+        //List<Dictionary<string, int>> upfrontCostList = pla2.AllUpfrontCosts(inventoryDict, pathList, targetName, targetAmount);
 
 
 
@@ -71,24 +62,24 @@ class Program
 
 
 
-
+        
     }
 
-    private static List<List<JObject>> RemoveDuplicateSteps(List<List<JObject>> pathList)
+    private static List<List<Trade>> RemoveDuplicateSteps(List<List<Trade>> pathList)
     {
-        List<List<JObject>> distinctPathList = new List<List<JObject>>();
+        List<List<Trade>> distinctPathList = new List<List<Trade>>();
         
-        foreach(List<JObject> path in pathList)
+        foreach(List<Trade> path in pathList)
         {
-            List<JObject> distinctPath = new List<JObject>();
+            List<Trade> distinctPath = new List<Trade>();
             
-            foreach(JObject trade in path)
+            foreach(Trade trade in path)
             {
                 bool isDistinctTrade = true;
                 
-                foreach (JObject distinctTrade in distinctPath)
+                foreach (Trade distinctTrade in distinctPath)
                 {
-                    if(TradeToStringSummary(trade) == TradeToStringSummary(distinctTrade))
+                    if(trade.StringSummary() == distinctTrade.StringSummary())
                     {
                         isDistinctTrade = false;
                         break;
@@ -107,7 +98,7 @@ class Program
         return distinctPathList;
     }
 
-    private static List<List<JObject>> FindTrades(Dictionary<string, int> inventoryDict, JArray trades, string targetItemName, List<string> analyzedTargetItems = null)
+    private static List<List<Trade>> FindTrades(Dictionary<string, int> inventoryDict, List<Trade> trades, string targetItemName, List<string> analyzedTargetItems = null)
     {       
         // start tracking already analyzed target items if needed
         if(analyzedTargetItems == null)
@@ -115,12 +106,12 @@ class Program
             analyzedTargetItems = new List<string>();
         }
         
-        JArray targetTrades = new JArray { };
-        foreach (JObject trade in trades)   // find all trades that result in the current target item
+        List<Trade> targetTrades = new List<Trade> { };
+        foreach (Trade trade in trades)   // find all trades that result in the current target item
         {
-            foreach(var resultItem in trade["result"])
+            foreach(Item resultItem in trade.ResultItems)
             {
-                if(resultItem.Value<string>("name") == targetItemName)
+                if(resultItem.Name == targetItemName)
                 {
                     targetTrades.Add(trade);
                     break;
@@ -128,28 +119,28 @@ class Program
             }
         }
       
-        List<List<JObject>> pathsFound = new List<List<JObject>>();
+        List<List<Trade>> pathsFound = new List<List<Trade>>();
 
         if(targetTrades.Count > 0)  // if at least one trade is possible for the target item in question
         {
-            foreach (JObject trade in targetTrades)
+            foreach (Trade trade in targetTrades)
             {
                 if (IsTradePossible(trade, inventoryDict))  // if trade is immediately possible, return true
                 {
-                    //Console.WriteLine($"--- Direct trade possible for {targetItemName} -> {TradeToStringSummary(trade)}");                  
-                    List<JObject> path = new List<JObject>();
+                    //Console.WriteLine($"--- Direct trade possible for {targetItemName} -> {trade.StringSummary()}");                  
+                    List<Trade> path = new List<Trade>();
                     path.Add(trade);
                     pathsFound.Add(path);
                 }
                 else   // otherwise determine if trade is possible via other connected trades
                 {
                     //Console.WriteLine($"--- Direct trade NOT possible for {targetItemName}... looking for indirect trades");
-                    List<List<List<JObject>>> pathListList = new List<List<List<JObject>>>();
+                    List<List<List<Trade>>> pathListList = new List<List<List<Trade>>>();
                     
                     // for each cost Item for this trade, recursively call FindTrades on that item, and add the resulting list to the <<<List>>> pathListList
-                    foreach (var costItem in trade["cost"])
+                    foreach (Item costItem in trade.CostItems)
                     {
-                        string costItemName = costItem.Value<string>("name");
+                        string costItemName = costItem.Name;
                         //Console.WriteLine($"--- Checking trades for {targetItemName} cost item {costItem.Value<string>("name")}");
 
                         // create a new list including the current target item and already analyzed target items to pass to the recurssive FindTrades call
@@ -168,7 +159,7 @@ class Program
                         // only consider trades for that cost item if it has not yet been analyzed as a target item
                         if (!analyzedTargetItems.Contains(costItemName))
                         {
-                            List<List<JObject>> costItemTrades = FindTrades(inventoryDict, trades, costItemName, updatedAnalyzedTargetItems);
+                            List<List<Trade>> costItemTrades = FindTrades(inventoryDict, trades, costItemName, updatedAnalyzedTargetItems);
                             if (costItemTrades != null)
                             {
                                 pathListList.Add(costItemTrades);
@@ -177,10 +168,10 @@ class Program
                     }
 
                     // find all potential combinations of paths leading to the above costItems, and add any/all found to the pathsFound list
-                    List<List<JObject>> indirectPaths = CombineAndConsolidateAllPossibleAltPathLists(pathListList);
+                    List<List<Trade>> indirectPaths = CombineAndConsolidateAllPossibleAltPathLists(pathListList);
 
                     // add the current trade to the start of each path in the indirect path list
-                    foreach (List<JObject> path in indirectPaths)
+                    foreach (List<Trade> path in indirectPaths)
                     {
                         path.Add(trade);
                     }
@@ -199,33 +190,33 @@ class Program
         return pathsFound;
     }
 
-    private static List<List<JObject>> CombineAndConsolidateAllPossibleAltPathLists(List<List<List<JObject>>> pathListList)
+    private static List<List<Trade>> CombineAndConsolidateAllPossibleAltPathLists(List<List<List<Trade>>> pathListList)
     {
         // base case for empty list:
         if (pathListList.Count == 0)
         {
-            return new List<List<JObject>> { };
+            return new List<List<Trade>> { };
         }
 
         // base case for 1 element: if only one path in pathListList, return that path list alone in the <<List>>
-        List<List<JObject>> firstPathList = (pathListList.First()).ToList();
+        List<List<Trade>> firstPathList = (pathListList.First()).ToList();
         if(pathListList.Count <= 1)  
         {
             return firstPathList;
         }
 
         // recursively call this method on the remainder of pathLists in the pathListList
-        List<List<JObject>> remainderPathList = CombineAndConsolidateAllPossibleAltPathLists(pathListList.Skip(1).ToList());
+        List<List<Trade>> remainderPathList = CombineAndConsolidateAllPossibleAltPathLists(pathListList.Skip(1).ToList());
 
-        List<List<JObject>> consolidatedPathList = new List<List<JObject>>();
+        List<List<Trade>> consolidatedPathList = new List<List<Trade>>();
 
         // combine firstPathList and remainderPathList into one list based on all possible combinations between the lists
 
-        foreach (List<JObject> pathA in firstPathList)
+        foreach (List<Trade> pathA in firstPathList)
         {
-            foreach(List<JObject> pathB in remainderPathList)
+            foreach(List<Trade> pathB in remainderPathList)
             {
-                List<JObject> combinedList = pathA.Concat(pathB).ToList();
+                List<Trade> combinedList = pathA.Concat(pathB).ToList();
                 consolidatedPathList.Add(combinedList);
             }
         }
@@ -233,12 +224,12 @@ class Program
         return consolidatedPathList;
     }
 
-    static bool IsTradePossible(JObject trade, Dictionary<string, int> inventoryDict)
+    static bool IsTradePossible(Trade trade, Dictionary<string, int> inventoryDict)
     {
-        foreach(var costItem in trade["cost"])
+        foreach(Item costItem in trade.CostItems)
         {
-            string costItemName = costItem.Value<string>("name");
-            int costItemQuantity = costItem.Value<int>("quantity");
+            string costItemName = costItem.Name;
+            int costItemQuantity = costItem.Quantity;
 
             if (!inventoryDict.ContainsKey(costItemName) || inventoryDict[costItemName] < costItemQuantity)
             {
@@ -249,11 +240,17 @@ class Program
         return true; // all required items & their quantities are available
     }
 
-    static Dictionary<string, int> InventoryJArrayToDictionary(JArray inventory)
+    static Dictionary<string, int> LoadInventory(string jsonFilePath)
     {
+        // Read the JSON file
+        string jsonContent = File.ReadAllText(jsonFilePath);
+
+        // Parse the JSON content into JArray
+        JArray inventoryArray = JArray.Parse(jsonContent);
+
         Dictionary<string, int> inventoryDict = new Dictionary<string, int>();
 
-        foreach (JObject item in inventory)
+        foreach (JObject item in inventoryArray)
         {
             string itemName = item.Value<string>("Name");
             int itemQuantity = item.Value<int>("Quantity");
@@ -274,44 +271,55 @@ class Program
 
 
 
-    static JArray LoadJArray(string jsonFilePath)
+    static List<Trade> LoadTradesList(string jsonFilePath)
     {
         // Read the JSON file
         string jsonContent = File.ReadAllText(jsonFilePath);
 
         // Parse the JSON content into JArray
-        return JArray.Parse(jsonContent);
+        JArray tradesArray = JArray.Parse(jsonContent);
+
+        List<Trade> trades = new List<Trade>();
+
+        foreach(JObject tradeObj in tradesArray)
+        {
+            string category = tradeObj.Value<string>("category");
+            
+            List<Item> costItems = new List<Item>();
+            foreach (var costItem in tradeObj["cost"])
+            {
+                string costItemName = costItem.Value<string>("name");
+                int costItemQuantity = costItem.Value<int>("quantity");
+                costItems.Add(new Item(costItemName, costItemQuantity));
+            }
+
+            List<Item> resultItems = new List<Item>();
+            foreach (var resultItem in tradeObj["result"])
+            {
+                string resultItemName = resultItem.Value<string>("name");
+                int resultItemQuantity = resultItem.Value<int>("quantity");
+                resultItems.Add(new Item(resultItemName, resultItemQuantity));
+            }
+
+            trades.Add(new Trade(category, costItems, resultItems));
+        }
+
+        return trades;
     }
 
-    private static void PrintPathList(List<List<JObject>> pathList)
+    private static void PrintPathList(List<List<Trade>> pathList)
     {       
-        foreach (List<JObject> path in pathList)
+        foreach (List<Trade> path in pathList)
         {
             List<string> strList = new List<string>();
-            foreach (JObject trade in path)
+            foreach (Trade trade in path)
             {
-                strList.Add(TradeToStringSummary(trade));
+                strList.Add(trade.StringSummary());
             }
             Console.WriteLine($"Trade Path: {string.Join(" -> ", strList)}");
         }      
     }
 
 
-    static string TradeToStringSummary(JObject trade)
-    {
-        List<string> costList = new List<string>();
-        List<string> resultList = new List<string>();
-
-        foreach (JObject item in trade["cost"])
-        {
-            costList.Add((string)item["name"]);
-        }
-        foreach (JObject item in trade["result"])
-        {
-            resultList.Add((string)item["name"]);
-        }
-
-        return $"{(string)trade["category"]} {string.Join(", ", costList)} for {string.Join(", ", resultList)}";
-
-    }
+    
 }
