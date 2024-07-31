@@ -40,5 +40,27 @@ namespace TradesAlg
             return $"{Category} {string.Join(", ", costList)} for {string.Join(", ", resultList)}";
 
         }
+
+        public bool IsPossible(List<Item> inventory)
+        {
+            foreach (Item costItem in CostItems)
+            {
+                string costItemName = costItem.Name;
+                int costItemQuantity = costItem.Quantity;
+
+                bool isPossible = false;
+                foreach(Item item in inventory)
+                {
+                    if (item.Name == costItemName && item.Quantity >= costItemQuantity)
+                    {
+                        isPossible = true;
+                    }
+                }
+
+                if (!isPossible) return false;
+            }
+
+            return true; // all required items & their quantities are available
+        }
     }
 }

@@ -15,21 +15,21 @@ class Program
         string programDir = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..");
 
         // Load Trades data
-        //List<Trade> allTradesList = LoadTradesList(Path.Combine(programDir, "tradesDebug.json"));
-        List<Trade> allTradesList = LoadTradesList(Path.Combine(programDir, "tradesSample.json"));
+        List<Trade> allTradesList = LoadTradesList(Path.Combine(programDir, "tradesDebug.json"));
+        //List<Trade> allTradesList = LoadTradesList(Path.Combine(programDir, "tradesSample.json"));
 
         // Load Inventory data
-        //Dictionary<string, int> inventoryDict = LoadInventory(Path.Combine(programDir, "inventoryDebug.json"));
-        Dictionary<string, int> inventoryDict = LoadInventory(Path.Combine(programDir, "inventorySample.json"));
+        List<Item> inventory = LoadInventory(Path.Combine(programDir, "inventoryDebug.json"));
+        //Dictionary<string, int> inventoryDict = LoadInventory(Path.Combine(programDir, "inventorySample.json"));
 
         // set the target Item to find trades for
-        string targetName = "Cloth";
+        string targetName = "Z";
         int targetAmount = 1;
 
         
 
         // find all possible trades!
-        List<List<Trade>> pathList = FindTrades(inventoryDict, allTradesList, targetName);
+        List<List<Trade>> pathList = FindTrades(inventory, allTradesList, targetName);
         
         // Remove duplicate / redundant steps in paths
         pathList = RemoveDuplicateSteps(pathList);
@@ -53,7 +53,7 @@ class Program
 
 
         PathListAnalysis2 pla2 = new PathListAnalysis2();
-        List<List<Item>> upfrontCostList = pla2.AllUpfrontCosts(inventoryDict, pathList, targetName, targetAmount);
+        List<List<Item>> upfrontCostList = pla2.AllUpfrontCosts(inventory, pathList, targetName, targetAmount);
 
 
 
@@ -99,7 +99,7 @@ class Program
         return distinctPathList;
     }
 
-    private static List<List<Trade>> FindTrades(Dictionary<string, int> inventoryDict, List<Trade> trades, string targetItemName, List<string> analyzedTargetItems = null)
+    private static List<List<Trade>> FindTrades(List<Item> inventory, List<Trade> trades, string targetItemName, List<string> analyzedTargetItems = null)
     {       
         // start tracking already analyzed target items if needed
         if(analyzedTargetItems == null)
@@ -126,7 +126,8 @@ class Program
         {
             foreach (Trade trade in targetTrades)
             {
-                if (IsTradePossible(trade, inventoryDict))  // if trade is immediately possible, return true
+                //Console.WriteLine($"Considering trade '{trade.StringSummary()}' that could result in {targetItemName}");
+                if (trade.IsPossible(inventory))  // if trade is immediately possible, return true
                 {
                     //Console.WriteLine($"--- Direct trade possible for {targetItemName} -> {trade.StringSummary()}");                  
                     List<Trade> path = new List<Trade>();
@@ -142,7 +143,7 @@ class Program
                     foreach (Item costItem in trade.CostItems)
                     {
                         string costItemName = costItem.Name;
-                        //Console.WriteLine($"--- Checking trades for {targetItemName} cost item {costItem.Value<string>("name")}");
+                        //Console.WriteLine($"--- Checking trades for {targetItemName} cost item {costItemName}");
 
                         // create a new list including the current target item and already analyzed target items to pass to the recurssive FindTrades call
                         List<string> updatedAnalyzedTargetItems = new List<string> { targetItemName }; 
@@ -151,16 +152,22 @@ class Program
                         //Console.WriteLine("Already checked trades for: " + string.Join(", ", updatedAnalyzedTargetItems));
 
                         // skip recurssive FindTrades call for this cost item if it is already in the inventory
-                        if (inventoryDict.ContainsKey(costItemName) && inventoryDict[costItemName] > 0)
+                        bool skipRecurssiveFindTradesCall = false;
+                        foreach(Item item in inventory)
                         {
-                            //Console.WriteLine($"--- Inventory contains {costItemName}, skipping further search for trades on this item");
-                            continue;
-                        }                        
+                            if (item.Name == costItemName && item.Quantity > 0)
+                            {
+                                //Console.WriteLine($"--- Inventory contains {costItemName}, skipping further search for trades on this item");
+                                skipRecurssiveFindTradesCall = true;
+                                break;
+                            }
+                        }
+                        if(skipRecurssiveFindTradesCall) { continue; }
 
                         // only consider trades for that cost item if it has not yet been analyzed as a target item
                         if (!analyzedTargetItems.Contains(costItemName))
                         {
-                            List<List<Trade>> costItemTrades = FindTrades(inventoryDict, trades, costItemName, updatedAnalyzedTargetItems);
+                            List<List<Trade>> costItemTrades = FindTrades(inventory, trades, costItemName, updatedAnalyzedTargetItems);
                             if (costItemTrades != null)
                             {
                                 pathListList.Add(costItemTrades);
@@ -225,23 +232,9 @@ class Program
         return consolidatedPathList;
     }
 
-    static bool IsTradePossible(Trade trade, Dictionary<string, int> inventoryDict)
-    {
-        foreach(Item costItem in trade.CostItems)
-        {
-            string costItemName = costItem.Name;
-            int costItemQuantity = costItem.Quantity;
+    
 
-            if (!inventoryDict.ContainsKey(costItemName) || inventoryDict[costItemName] < costItemQuantity)
-            {
-                return false; // inventory doesn't contain enough of the required item
-            }
-        }
-
-        return true; // all required items & their quantities are available
-    }
-
-    static Dictionary<string, int> LoadInventory(string jsonFilePath)
+    static List<Item> LoadInventory(string jsonFilePath)
     {
         // Read the JSON file
         string jsonContent = File.ReadAllText(jsonFilePath);
@@ -249,24 +242,17 @@ class Program
         // Parse the JSON content into JArray
         JArray inventoryArray = JArray.Parse(jsonContent);
 
-        Dictionary<string, int> inventoryDict = new Dictionary<string, int>();
+        List<Item> inventory = new List<Item>();
 
         foreach (JObject item in inventoryArray)
         {
             string itemName = item.Value<string>("Name");
             int itemQuantity = item.Value<int>("Quantity");
-
-            if (!inventoryDict.ContainsKey(itemName))
-            {
-                inventoryDict[itemName] = itemQuantity;
-            }
-            else
-            {
-                inventoryDict[itemName] += itemQuantity;
-            }
+            Console.WriteLine($"Inventory item: {itemQuantity} {itemName}");
+            inventory.Add(new Item(itemName, itemQuantity));
         }
 
-        return inventoryDict;
+        return inventory;
     }
 
 

@@ -12,14 +12,14 @@ namespace TradesAlg
     {
         public PathListAnalysis2() { }
 
-        public List<List<Item>> AllUpfrontCosts(Dictionary<string, int> inventoryDict, List<List<Trade>> pathList, string targetName, int targetAmount)
+        public List<List<Item>> AllUpfrontCosts(List<Item> inventory, List<List<Trade>> pathList, string targetName, int targetAmount)
         {
             List<List<Item>> upfrontCostList = new List<List<Item>>();
 
             for(int i = 0; i < pathList.Count; i++)
             {
                 Console.WriteLine($"\nPath #{i+1}:");
-                upfrontCostList.Add(UpfrontCost(inventoryDict, pathList[i], targetName, targetAmount));
+                upfrontCostList.Add(UpfrontCost(inventory, pathList[i], targetName, targetAmount));
             }
 
             PrintUpfrontCostList(upfrontCostList);
@@ -28,39 +28,49 @@ namespace TradesAlg
 
         }
 
-        private List<Item> UpfrontCost(Dictionary<string, int> inventoryDict, List<Trade> path, string targetName, int targetAmount)
+        private List<Item> UpfrontCost(List<Item> inventory, List<Trade> path, string targetName, int targetAmount)
         {
             Console.WriteLine($" --- Starting Cost analysis to procure {targetAmount} {targetName}...");
 
-            List<Item> upfrontCost = new List<Item>();
-
             Dictionary<string, int> activeInventory = new Dictionary<string, int>();
+            Dictionary<string, int> runningCost = new Dictionary<string, int>();
 
-            List<string> sourceItems = SourceItemsFromInventoryDict(inventoryDict);
+            List<string> sourceItemNames = SourceItemsFromInventoryDict(inventory);
 
-            PLA2_Node baseNode = new PLA2_Node(targetName, null, path, sourceItems);
-
-
+            PLA2_Node baseNode = new PLA2_Node(targetName, null, path, sourceItemNames);
 
 
-            return upfrontCost;
+
+            runningCost = TraverseAndSimulateForCost(baseNode, activeInventory, runningCost, targetName, targetAmount);
+
+
+
+            return new List<Item>();
         }
 
-        private Dictionary<string, int> Cost(List<JObject> path, string targetName, int targetAmount)
+        private Dictionary<string, int> TraverseAndSimulateForCost(PLA2_Node node, Dictionary<string, int> activeInventory, Dictionary<string, int> runningCost, string targetName, int targetAmount)
         {
-            return null;
+            
+            
+            
+            
+            
+            
+            
+            
+            return runningCost;
         }
 
         // from the inventory Dict, generate a list of "source" items whose amounts present will be the basis of the path's upfront cost
-        private List<string> SourceItemsFromInventoryDict(Dictionary<string, int> inventoryDict)
+        private List<string> SourceItemsFromInventoryDict(List<Item> inventory)
         {
             List<string> sourceItems = new List<string>();
-            foreach(KeyValuePair<string,int> kvp in inventoryDict)
+            foreach(Item item in inventory)
             {
-                if (kvp.Value > 0)
+                if (item.Quantity > 0)
                 {
-                    sourceItems.Add(kvp.Key);
-                    Console.WriteLine($"Source item: {kvp.Key}");
+                    sourceItems.Add(item.Name);
+                    Console.WriteLine($"Source item: {item.Name} ({item.Quantity})");
                 }
             }
             return sourceItems;

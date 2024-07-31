@@ -32,9 +32,6 @@ namespace TradesAlg
             if(VitalTrade != null) Console.WriteLine($"Vital trade for '{ItemName}': {VitalTrade.StringSummary()}");
 
             VitalTradeCostNodes = DetermineAndCreateVitalTradeCostNodes(path, sourceItems);
-
-  
-            
         }
 
         private Trade DetermineVitalTrade(List<Trade> path, List<string> sourceItems)
