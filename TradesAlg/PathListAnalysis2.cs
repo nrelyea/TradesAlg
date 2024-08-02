@@ -40,89 +40,102 @@ namespace TradesAlg
 
             //Console.WriteLine("\nNode structuring complete. Beginning traversal / simulation...");
 
-            Dictionary<string, int> activeInventory = new Dictionary<string, int>();
-            Dictionary<string, int> runningCost = new Dictionary<string, int>();
 
-            runningCost = TraverseAndSimulateForCost(baseNode, activeInventory, runningCost, targetName, targetAmount);
+
+            Dictionary<string, int> runningCost = TraverseAndSimulateForCost(baseNode, targetAmount);
 
 
 
             return runningCost;
         }
 
-        private Dictionary<string, int> TraverseAndSimulateForCost(PLA2_Node node, Dictionary<string, int> activeInventory, Dictionary<string, int> runningCost, string targetName, int targetAmount)
+        private Dictionary<string, int> TraverseAndSimulateForCost(PLA2_Node baseNode, int targetAmount)
         {
-            // Node is source
-            if(node.VitalTrade == null)
+            Dictionary<string, int> activeInventory = new Dictionary<string, int>();
+            Dictionary<string, int> runningCost = new Dictionary<string, int>();
+
+            PLA2_Node node = baseNode;
+
+            while (node != null)
             {
-                // determine amount of source item needed to satisfy child node's vital trade
-                int costItemQuantityNeededForTrade = QuantityOfCostItemNeededForTrade(node.ChildNode.VitalTrade, node.ItemName);
-
-                // determine current active quantity of source item present
-                int activeItemQuantity = activeInventory.ContainsKey(node.ItemName) ? activeInventory[node.ItemName] : 0;       
-
-                // determine how much to add to active inventory
-                int itemQuantityToAddForTrade = costItemQuantityNeededForTrade - activeItemQuantity;
-
-                // add necessary amount of source item to active inventory
-                activeInventory[node.ItemName] = itemQuantityToAddForTrade;
-                // add same amount to running cost total
-                runningCost[node.ItemName] = runningCost.ContainsKey(node.ItemName) ? runningCost[node.ItemName] + itemQuantityToAddForTrade : itemQuantityToAddForTrade;
-
-                return TraverseAndSimulateForCost(node.ChildNode, activeInventory, runningCost, targetName, targetAmount);
-            }
-            // Node is target
-            else if(node.ChildNode == null)
-            {
-                // if we have enough of the target item that we want, return the final upfront cost
-                if(activeInventory.ContainsKey(node.ItemName) && activeInventory[node.ItemName] >= targetAmount)
+                // Node is source
+                if (node.VitalTrade == null)
                 {
-                    return runningCost;     // FINAL UPFRONT COST RETURN
+                    // determine amount of source item needed to satisfy child node's vital trade
+                    int costItemQuantityNeededForTrade = QuantityOfCostItemNeededForTrade(node.ChildNode.VitalTrade, node.ItemName);
+
+                    // determine current active quantity of source item present
+                    int activeItemQuantity = activeInventory.ContainsKey(node.ItemName) ? activeInventory[node.ItemName] : 0;
+
+                    // determine how much to add to active inventory
+                    int itemQuantityToAddForTrade = costItemQuantityNeededForTrade - activeItemQuantity;
+
+                    // add necessary amount of source item to active inventory
+                    activeInventory[node.ItemName] = itemQuantityToAddForTrade;
+                    // add same amount to running cost total
+                    runningCost[node.ItemName] = runningCost.ContainsKey(node.ItemName) ? runningCost[node.ItemName] + itemQuantityToAddForTrade : itemQuantityToAddForTrade;
+
+                    node = node.ChildNode;
+                    continue;
                 }
-
-                // if Vital Trade for target is possible, simulate the trade
-                if(SimulateTradeExecution(node.VitalTrade, ref activeInventory))
+                // Node is target
+                else if (node.ChildNode == null)
                 {
-                    // after simulating the trade, analyze the target node again
-                    return TraverseAndSimulateForCost(node, activeInventory, runningCost, targetName, targetAmount);
-                }
-
-                // if Vital Trade for target is not possible...
-                foreach(PLA2_Node costNode in node.VitalTradeCostNodes)
-                {
-                    int costItemQuantityNeededForTrade = QuantityOfCostItemNeededForTrade(node.VitalTrade, costNode.ItemName);
-
-                    // if active inventory has none of costNode or not enough of it to satisfy the target's Vital Trade
-                    if (!activeInventory.ContainsKey(costNode.ItemName) || activeInventory[costNode.ItemName] < costItemQuantityNeededForTrade)
+                    // if we have enough of the target item that we want, return the final upfront cost
+                    if (activeInventory.ContainsKey(node.ItemName) && activeInventory[node.ItemName] >= targetAmount)
                     {
-                        // Analyze insufficient cost item's node
-                        return TraverseAndSimulateForCost(costNode, activeInventory, runningCost, targetName, targetAmount);
+                        return runningCost;     // FINAL UPFRONT COST RETURN
+                    }
+
+                    // if Vital Trade for target is possible, simulate the trade
+                    if (SimulateTradeExecution(node.VitalTrade, ref activeInventory))
+                    {
+                        // after simulating the trade, analyze the target node again
+                        continue;
+                    }
+
+                    // if Vital Trade for target is not possible...
+                    foreach (PLA2_Node costNode in node.VitalTradeCostNodes)
+                    {
+                        int costItemQuantityNeededForTrade = QuantityOfCostItemNeededForTrade(node.VitalTrade, costNode.ItemName);
+
+                        // if active inventory has none of costNode or not enough of it to satisfy the target's Vital Trade
+                        if (!activeInventory.ContainsKey(costNode.ItemName) || activeInventory[costNode.ItemName] < costItemQuantityNeededForTrade)
+                        {
+                            // Analyze insufficient cost item's node
+                            node = costNode;
+                            continue;
+                        }
+                    }
+                }
+                // Node is mid-tree
+                else
+                {
+                    // if Vital Trade for this node is possible, simulate the trade
+                    if (SimulateTradeExecution(node.VitalTrade, ref activeInventory))
+                    {
+                        // after simulating the trade, analyze its child node
+                        node = node.ChildNode;
+                        continue;
+                    }
+
+                    // if Vital Trade for this node is not possible...
+                    foreach (PLA2_Node costNode in node.VitalTradeCostNodes)
+                    {
+                        int costItemQuantityNeededForTrade = QuantityOfCostItemNeededForTrade(node.VitalTrade, costNode.ItemName);
+
+                        // if active inventory has none of costNode or not enough of it to satisfy this nodes's Vital Trade
+                        if (!activeInventory.ContainsKey(costNode.ItemName) || activeInventory[costNode.ItemName] < costItemQuantityNeededForTrade)
+                        {
+                            // Analyze insufficient cost item's node
+                            node = costNode;
+                            continue;
+                        }
                     }
                 }
             }
-            // Node is mid-tree
-            else
-            {
-                // if Vital Trade for this node is possible, simulate the trade
-                if (SimulateTradeExecution(node.VitalTrade, ref activeInventory))
-                {
-                    // after simulating the trade, analyze its child node
-                    return TraverseAndSimulateForCost(node.ChildNode, activeInventory, runningCost, targetName, targetAmount);
-                }
 
-                // if Vital Trade for this node is not possible...
-                foreach (PLA2_Node costNode in node.VitalTradeCostNodes)
-                {
-                    int costItemQuantityNeededForTrade = QuantityOfCostItemNeededForTrade(node.VitalTrade, costNode.ItemName);
 
-                    // if active inventory has none of costNode or not enough of it to satisfy this nodes's Vital Trade
-                    if (!activeInventory.ContainsKey(costNode.ItemName) || activeInventory[costNode.ItemName] < costItemQuantityNeededForTrade)
-                    {
-                        // Analyze insufficient cost item's node
-                        return TraverseAndSimulateForCost(costNode, activeInventory, runningCost, targetName, targetAmount);
-                    }
-                }
-            }
 
 
 
