@@ -13,24 +13,24 @@ namespace TradesAlg
     {
         public PathListAnalysis2() { }
 
-        public List<Dictionary<string,int>> AllUpfrontCosts(List<Item> inventory, List<List<Trade>> pathList, string targetName, int targetAmount)
+        public List<OptionPackage> AllOptionPackages(List<Item> inventory, List<List<Trade>> pathList, string targetName, int targetAmount)
         {
-            List<Dictionary<string, int>> upfrontCostList = new List<Dictionary<string, int>>();
+            List<OptionPackage> optionPackageList = new List<OptionPackage>();
 
             for(int i = 0; i < pathList.Count; i++)
             {
                 Console.WriteLine($"\nPath #{i+1}:");
-                upfrontCostList.Add(UpfrontCost(inventory, pathList[i], targetName, targetAmount));
+                optionPackageList.Add(GenerateOptionPackage(inventory, pathList[i], targetName, targetAmount));
             }
 
             Console.WriteLine("\n");
-            PrintUpfrontCostList(upfrontCostList);
+            PrintOptionPackageList(optionPackageList);
 
-            return upfrontCostList;
+            return optionPackageList;
 
         }
 
-        private Dictionary<string, int> UpfrontCost(List<Item> inventory, List<Trade> path, string targetName, int targetAmount)
+        private OptionPackage GenerateOptionPackage(List<Item> inventory, List<Trade> path, string targetName, int targetAmount)
         {
             Console.WriteLine($" --- Starting Cost analysis to procure {targetAmount} {targetName}...");
 
@@ -42,17 +42,18 @@ namespace TradesAlg
 
 
 
-            Dictionary<string, int> runningCost = TraverseAndSimulateForCost(baseNode, targetAmount);
+            OptionPackage optionPackage = TraverseAndSimulateForOptionPackage(path, baseNode, targetAmount);
 
 
 
-            return runningCost;
+            return optionPackage;
         }
 
-        private Dictionary<string, int> TraverseAndSimulateForCost(PLA2_Node baseNode, int targetAmount)
+        private OptionPackage TraverseAndSimulateForOptionPackage(List<Trade> path, PLA2_Node baseNode, int targetAmount)
         {
             Dictionary<string, int> activeInventory = new Dictionary<string, int>();
             Dictionary<string, int> runningCost = new Dictionary<string, int>();
+            Dictionary<Trade, int> tradeCounts = new Dictionary<Trade, int>();
 
             PLA2_Node node = baseNode;
 
@@ -84,12 +85,15 @@ namespace TradesAlg
                     // if we have enough of the target item that we want, return the final upfront cost
                     if (activeInventory.ContainsKey(node.ItemName) && activeInventory[node.ItemName] >= targetAmount)
                     {
-                        return runningCost;     // FINAL UPFRONT COST RETURN
+                        return new OptionPackage(runningCost, path, tradeCounts);     // FINAL UPFRONT COST RETURN
                     }
 
                     // if Vital Trade for target is possible, simulate the trade
                     if (SimulateTradeExecution(node.VitalTrade, ref activeInventory))
                     {
+                        // update Trade Count for this trade as it has been executed
+                        UpdateTradeCount(node.VitalTrade, ref tradeCounts);
+                        
                         // after simulating the trade, analyze the target node again
                         continue;
                     }
@@ -114,6 +118,9 @@ namespace TradesAlg
                     // if Vital Trade for this node is possible, simulate the trade
                     if (SimulateTradeExecution(node.VitalTrade, ref activeInventory))
                     {
+                        // update Trade Count for this trade as it has been executed
+                        UpdateTradeCount(node.VitalTrade, ref tradeCounts);
+
                         // after simulating the trade, analyze its child node
                         node = node.ChildNode;
                         continue;
@@ -143,7 +150,21 @@ namespace TradesAlg
 
             Console.WriteLine("%%% ERROR: Terminating Traversal, correct traversal path / condition not found %%%");
             
-            return runningCost;
+            return null;
+        }
+
+        private void UpdateTradeCount(Trade trade, ref Dictionary<Trade, int> counts)
+        {
+            if (counts.ContainsKey(trade))
+            {
+                //Console.WriteLine($"Changing count for Trade: [{trade.StringSummary()}] from {counts[trade]} to {counts[trade] + 1}");
+                counts[trade] = counts[trade] + 1;
+            }
+            else
+            {
+                //Console.WriteLine($"Adding new trade execution for: [{trade.StringSummary()}]");
+                counts[trade] = 1;
+            }
         }
 
         private int QuantityOfCostItemNeededForTrade(Trade trade, string costItemName)
@@ -206,15 +227,16 @@ namespace TradesAlg
             return sourceItems;
         }
 
-        private void PrintUpfrontCostList(List<Dictionary<string,int>> upfrontCostList)
+        private void PrintOptionPackageList(List<OptionPackage> optionPackageList)
         {
-            for(int i = 0; i < upfrontCostList.Count; i++)
+            for(int i = 0; i < optionPackageList.Count; i++)
             {
-                Console.WriteLine($"Total upfront cost for Path #{i+1}:");
-                foreach (KeyValuePair<string,int> costPair in upfrontCostList[i])
+                Console.WriteLine($"Total upfront cost for Option #{i+1}:");
+                foreach (KeyValuePair<string,int> costPair in optionPackageList[i].UpfrontCost)
                 {
                     Console.WriteLine($" - {costPair.Value} {costPair.Key}");
                 }
+                optionPackageList[i].PrintOptionSummary();
             }
         }
 

@@ -240,5 +240,35 @@
         "quantity": 4
       }
     ]
+  },
+  {
+    "category": "Sell",
+    "cost": [
+      {
+        "name": "Wood",
+        "quantity": 500
+      }
+    ],
+    "result": [
+      {
+        "name": "Stone",
+        "quantity": 150
+      }
+    ]
+  },
+  {
+    "category": "Sell",
+    "cost": [
+      {
+        "name": "Stone",
+        "quantity": 150
+      }
+    ],
+    "result": [
+      {
+        "name": "Wood",
+        "quantity": 500
+      }
+    ]
   }
 ]

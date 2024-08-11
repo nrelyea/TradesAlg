@@ -24,7 +24,7 @@ class Program
 
         // set the target Item to find trades for
         string targetName = "Crossbow";
-        int targetAmount = 123456;
+        int targetAmount = 1234;
 
 
 
@@ -50,10 +50,10 @@ class Program
 
 
 
-        // Determine up front costs of each trade path as a dictionary of cost items and their amount
+        // Determine full option packages with upfront costs of each trade path as a dictionary of cost items and their amount
 
         PathListAnalysis2 pla2 = new PathListAnalysis2();
-        List<Dictionary<string,int>> upfrontCostList = pla2.AllUpfrontCosts(inventory, pathList, targetName, targetAmount);
+        List<OptionPackage> optionPackageList = pla2.AllOptionPackages(inventory, pathList, targetName, targetAmount);
 
 
 

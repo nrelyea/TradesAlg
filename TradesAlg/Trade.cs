@@ -62,5 +62,30 @@ namespace TradesAlg
 
             return true; // all required items & their quantities are available
         }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Trade other)
+            {
+                return Category == other.Category &&
+                       CostItems.SequenceEqual(other.CostItems) &&
+                       ResultItems.SequenceEqual(other.ResultItems);
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = Category.GetHashCode();
+            foreach (var item in CostItems)
+            {
+                hash = HashCode.Combine(hash, item.GetHashCode());
+            }
+            foreach (var item in ResultItems)
+            {
+                hash = HashCode.Combine(hash, item.GetHashCode());
+            }
+            return hash;
+        }
     }
 }

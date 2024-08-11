@@ -17,5 +17,19 @@ namespace TradesAlg
             Quantity = quantity;
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is Item other)
+            {
+                return Name == other.Name && Quantity == other.Quantity;
+            }
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Name, Quantity);
+        }
+
     }
 }
