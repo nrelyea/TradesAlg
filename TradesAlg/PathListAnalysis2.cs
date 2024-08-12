@@ -23,9 +23,6 @@ namespace TradesAlg
                 optionPackageList.Add(GenerateOptionPackage(inventory, pathList[i], targetName, targetAmount));
             }
 
-            Console.WriteLine("\n");
-            PrintOptionPackageList(optionPackageList);
-
             return optionPackageList;
 
         }
@@ -85,7 +82,9 @@ namespace TradesAlg
                     // if we have enough of the target item that we want, return the final upfront cost
                     if (activeInventory.ContainsKey(node.ItemName) && activeInventory[node.ItemName] >= targetAmount)
                     {
-                        return new OptionPackage(runningCost, path, tradeCounts);     // FINAL UPFRONT COST RETURN
+                        activeInventory[node.ItemName] = 0;     // Zero out target item quantity in inventory, which is being loaded into OptionPackage as remainder
+                        
+                        return new OptionPackage(runningCost, path, tradeCounts, activeInventory);     // FINAL UPFRONT COST RETURN
                     }
 
                     // if Vital Trade for target is possible, simulate the trade
@@ -227,8 +226,9 @@ namespace TradesAlg
             return sourceItems;
         }
 
-        private void PrintOptionPackageList(List<OptionPackage> optionPackageList)
+        public void PrintOptionPackageList(List<OptionPackage> optionPackageList)
         {
+            Console.WriteLine("\n");
             for(int i = 0; i < optionPackageList.Count; i++)
             {
                 Console.WriteLine($"\nTotal upfront cost for Option #{i+1}:");

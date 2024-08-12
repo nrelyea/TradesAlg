@@ -24,7 +24,7 @@ class Program
 
         // set the target Item to find trades for
         string targetName = "Crossbow";
-        int targetAmount = 123456;
+        int targetAmount = 5;
 
 
 
@@ -55,6 +55,7 @@ class Program
         PathListAnalysis2 pla2 = new PathListAnalysis2();
         List<OptionPackage> optionPackageList = pla2.AllOptionPackages(inventory, pathList, targetName, targetAmount);
 
+        pla2.PrintOptionPackageList(optionPackageList);
 
 
 
@@ -63,7 +64,6 @@ class Program
 
 
 
-        
     }
 
     
