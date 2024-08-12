@@ -231,7 +231,7 @@ namespace TradesAlg
         {
             for(int i = 0; i < optionPackageList.Count; i++)
             {
-                Console.WriteLine($"Total upfront cost for Option #{i+1}:");
+                Console.WriteLine($"\nTotal upfront cost for Option #{i+1}:");
                 foreach (KeyValuePair<string,int> costPair in optionPackageList[i].UpfrontCost)
                 {
                     Console.WriteLine($" - {costPair.Value} {costPair.Key}");

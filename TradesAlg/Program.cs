@@ -24,7 +24,7 @@ class Program
 
         // set the target Item to find trades for
         string targetName = "Crossbow";
-        int targetAmount = 1234;
+        int targetAmount = 123456;
 
 
 
