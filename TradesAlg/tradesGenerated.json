@@ -1,0 +1,25 @@
+[
+  {
+    "Category": "Craft",
+    "CostItems": [
+      {
+        "Name": "Wood",
+        "Quantity": 200
+      },
+      {
+        "Name": "Metal Fragments",
+        "Quantity": 75
+      },
+      {
+        "Name": "Rope",
+        "Quantity": 2
+      }
+    ],
+    "ResultItems": [
+      {
+        "Name": "Crossbow",
+        "Quantity": 1
+      }
+    ]
+  }
+]

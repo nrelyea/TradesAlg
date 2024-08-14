@@ -10,8 +10,10 @@ namespace TradesAlg
     {
         public PathGeneration() { }
 
-        public List<List<Trade>> FindTrades(List<Item> inventory, List<Trade> trades, string targetItemName, List<string> analyzedTargetItems = null)
+        public List<List<Trade>> FindTrades(List<Item> inventory, List<Trade> trades, string targetItemName, int depth, List<string> analyzedTargetItems = null)
         {
+            if (depth <= 0) return null;    // stop path search if depth has been reached
+            
             // start tracking already analyzed target items if needed
             if (analyzedTargetItems == null)
             {
@@ -25,6 +27,7 @@ namespace TradesAlg
                 {
                     if (resultItem.Name == targetItemName)
                     {
+                        //Console.WriteLine($"- target trade found: {trade.StringSummary()}");
                         targetTrades.Add(trade);
                         break;
                     }
@@ -78,7 +81,8 @@ namespace TradesAlg
                             // only consider trades for that cost item if it has not yet been analyzed as a target item
                             if (!analyzedTargetItems.Contains(costItemName))
                             {
-                                List<List<Trade>> costItemTrades = FindTrades(inventory, trades, costItemName, updatedAnalyzedTargetItems);
+                                //Console.WriteLine($"Recursive call #{count}  Number of items already analyzed: {analyzedTargetItems.Count}");
+                                List<List<Trade>> costItemTrades = FindTrades(inventory, trades, costItemName, depth - 1, updatedAnalyzedTargetItems);
                                 if (costItemTrades != null)
                                 {
                                     pathListList.Add(costItemTrades);
@@ -102,7 +106,7 @@ namespace TradesAlg
             }
             else
             {
-                Console.WriteLine($"--- No trades possible for {targetItemName}");
+                //Console.WriteLine($"--- No trades possible for {targetItemName}");
                 return null;   // no trades exist for the target item
             }
 

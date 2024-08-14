@@ -24,7 +24,7 @@ namespace TradesAlg
         }
 
         public string StringSummary()
-        {                       
+        {
             List<string> costList = new List<string>();
             List<string> resultList = new List<string>();
 

@@ -14,48 +14,76 @@ class Program
         // Path to Program.cs class
         string programDir = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..");
 
-        // Load Trades data
-        //List<Trade> allTradesList = LoadTradesList(Path.Combine(programDir, "tradesDebug.json"));
-        List<Trade> allTradesList = LoadTradesList(Path.Combine(programDir, "tradesSample.json"));
+
 
         // Load Inventory data
         //List<Item> inventory = LoadInventory(Path.Combine(programDir, "inventoryDebug.json"));
         List<Item> inventory = LoadInventory(Path.Combine(programDir, "inventorySample.json"));
 
-        // set the target Item to find trades for
-        string targetName = "Crossbow";
-        int targetAmount = 5;
+        // Target item & quantity criteria
+        string targetName = "cloth";
+        int targetAmount = 54;
+
+        // Trades list generation criteria
+        int workBenchLevel = 3;
+        bool safeZoneRecycler = true;
+        bool outPostTradesEnabled = true;
+        bool banditTradesEnabled = true;
+        string itemDataPath = Path.Combine(programDir, "itemsbyname.json");
+        string marketDataPath = Path.Combine(programDir, "marketTrades.json");
+
+        string generatedTradesPath = Path.Combine(programDir, "tradesGenerated.json");
+
+        TradeGeneration tg = new TradeGeneration(
+            workBenchLevel, safeZoneRecycler, outPostTradesEnabled, banditTradesEnabled, itemDataPath, marketDataPath, generatedTradesPath
+        );
+
+        List<Trade> allTradesList = tg.GeneratedTrades;
+
+        Console.WriteLine($"Trades generated: {allTradesList.Count}");
+
+
+        // Load Trades data
+        //List<Trade> allTradesList = LoadTradesList(Path.Combine(programDir, "tradesDebug.json"));
+        //List<Trade> allTradesList = LoadTradesList(Path.Combine(programDir, "tradesSample.json"));
+
+
 
 
 
         PathGeneration pg = new PathGeneration();
 
         // find all possible trades!
-        List<List<Trade>> pathList = pg.FindTrades(inventory, allTradesList, targetName);
+        int depth = 3;
+        List<List<Trade>> pathList = pg.FindTrades(inventory, allTradesList, targetName, depth);
         
-        // Remove duplicate / redundant steps in paths
-        pathList = pg.RemoveDuplicateSteps(pathList);
+
         
-        if(pathList.Count > 0)
+        if(pathList != null && pathList.Count > 0)
         {
-            Console.WriteLine("\nTrade is possible!\n");
+            // Remove duplicate / redundant steps in paths
+            pathList = pg.RemoveDuplicateSteps(pathList);
+            
+            Console.WriteLine($"\nTrade is possible!\nPaths found: {pathList.Count}\n");
             pg.PrintPathList(pathList);
         }
         else
         {
             Console.WriteLine("\nTrade is NOT possible.");
+            return;
         }
 
-        Console.WriteLine("\n\n\n");
+
+
 
 
 
         // Determine full option packages with upfront costs of each trade path as a dictionary of cost items and their amount
 
-        PathListAnalysis2 pla2 = new PathListAnalysis2();
-        List<OptionPackage> optionPackageList = pla2.AllOptionPackages(inventory, pathList, targetName, targetAmount);
+        PathListAnalysis3 pla3 = new PathListAnalysis3();
+        List<OptionPackage> optionPackageList = pla3.AllOptionPackages(inventory, pathList, targetName, targetAmount);
 
-        pla2.PrintOptionPackageList(optionPackageList);
+        pla3.PrintOptionPackageList(optionPackageList);
 
 
 

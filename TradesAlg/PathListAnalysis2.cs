@@ -33,7 +33,7 @@ namespace TradesAlg
 
             List<string> sourceItemNames = SourceItemsFromInventoryDict(inventory);
 
-            PLA2_Node baseNode = new PLA2_Node(targetName, null, path, sourceItemNames);
+            PLA2_Node baseNode = new PLA2_Node(targetName, null, path, sourceItemNames, new HashSet<string> { });
 
             //Console.WriteLine("\nNode structuring complete. Beginning traversal / simulation...");
 
@@ -48,6 +48,8 @@ namespace TradesAlg
 
         private OptionPackage TraverseAndSimulateForOptionPackage(List<Trade> path, PLA2_Node baseNode, int targetAmount)
         {
+            //Console.WriteLine($"Analyzing path with length {path.Count}");
+            
             Dictionary<string, int> activeInventory = new Dictionary<string, int>();
             Dictionary<string, int> runningCost = new Dictionary<string, int>();
             Dictionary<Trade, int> tradeCounts = new Dictionary<Trade, int>();
@@ -59,6 +61,8 @@ namespace TradesAlg
                 // Node is source
                 if (node.VitalTrade == null)
                 {
+                    //Console.WriteLine($"Analyzing SOURCE node");
+                    
                     // determine amount of source item needed to satisfy child node's vital trade
                     int costItemQuantityNeededForTrade = QuantityOfCostItemNeededForTrade(node.ChildNode.VitalTrade, node.ItemName);
 
@@ -79,6 +83,8 @@ namespace TradesAlg
                 // Node is target
                 else if (node.ChildNode == null)
                 {
+                    //Console.WriteLine($"Analyzing TARGET node -> VitalTrade: {node.VitalTrade.StringSummary()}");
+
                     // if we have enough of the target item that we want, return the final upfront cost
                     if (activeInventory.ContainsKey(node.ItemName) && activeInventory[node.ItemName] >= targetAmount)
                     {
@@ -114,6 +120,8 @@ namespace TradesAlg
                 // Node is mid-tree
                 else
                 {
+                    //Console.WriteLine($"Analyzing MID-TREE node -> VitalTrade: {node.VitalTrade.StringSummary()}");
+
                     // if Vital Trade for this node is possible, simulate the trade
                     if (SimulateTradeExecution(node.VitalTrade, ref activeInventory))
                     {
@@ -156,12 +164,12 @@ namespace TradesAlg
         {
             if (counts.ContainsKey(trade))
             {
-                //Console.WriteLine($"Changing count for Trade: [{trade.StringSummary()}] from {counts[trade]} to {counts[trade] + 1}");
+                Console.WriteLine($"Changing count for Trade: [{trade.StringSummary()}] from {counts[trade]} to {counts[trade] + 1}");
                 counts[trade] = counts[trade] + 1;
             }
             else
             {
-                //Console.WriteLine($"Adding new trade execution for: [{trade.StringSummary()}]");
+                Console.WriteLine($"Adding new trade execution for: [{trade.StringSummary()}]");
                 counts[trade] = 1;
             }
         }

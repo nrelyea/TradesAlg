@@ -16,20 +16,24 @@ namespace TradesAlg
         public Trade VitalTrade;
         public List<PLA2_Node> VitalTradeCostNodes;
         public PLA2_Node ChildNode;
+        private HashSet<string> ExistingNodeItemNames;
         
-        public PLA2_Node(string itemName, PLA2_Node childNode, List<Trade> path, List<string> sourceItems)
+        public PLA2_Node(string itemName, PLA2_Node childNode, List<Trade> path, List<string> sourceItems, HashSet<string> existingNodeItemNames)
         {
+            ExistingNodeItemNames = existingNodeItemNames;
+            ExistingNodeItemNames.Add(itemName);
+
             ItemName = itemName;
 
-            //Console.WriteLine($"Created new Node for '{ItemName}'...");
+            Console.WriteLine($"Created new Node for '{ItemName}'...");
 
             ChildNode = childNode;
 
-            //if (ChildNode != null) { Console.WriteLine($"... with Child Node = '{ChildNode.ItemName}'"); }
+            if (ChildNode != null) { Console.WriteLine($"... with Child Node = '{ChildNode.ItemName}'"); }
 
             VitalTrade = DetermineVitalTrade(path, sourceItems);
 
-            //if(VitalTrade != null) Console.WriteLine($"Vital trade for '{ItemName}': {VitalTrade.StringSummary()}");
+            if(VitalTrade != null) Console.WriteLine($"Vital trade for '{ItemName}': {VitalTrade.StringSummary()}");
 
             VitalTradeCostNodes = DetermineAndCreateVitalTradeCostNodes(path, sourceItems);
         }
@@ -38,7 +42,7 @@ namespace TradesAlg
         {
             if (sourceItems.Contains(ItemName))
             {
-                //Console.WriteLine($"'{ItemName}' is a source item, no vital trade");
+                Console.WriteLine($"'{ItemName}' is a source item, no vital trade");
                 return null;
             }
             else
@@ -68,9 +72,21 @@ namespace TradesAlg
             foreach (Item costItem in VitalTrade.CostItems)
             {
                 string costItemName = costItem.Name;
-                //Console.WriteLine($"Adding '{costItemName}' as a Vital Trade Cost Item for '{ItemName}'");
-                PLA2_Node costNode = new PLA2_Node(costItemName, this, path, sourceItems);
-                vitalTradeCostNodes.Add(costNode);
+                if (!ExistingNodeItemNames.Contains(costItemName))
+                {
+                    Console.WriteLine($"Adding '{costItemName}' as a Vital Trade Cost Item for '{ItemName}'");
+
+                    // remove last Trade in path for next set of Node creation(s)
+                    List<Trade> shortenedPath = new List<Trade>(path);
+                    shortenedPath.RemoveAt(shortenedPath.Count - 1);
+
+                    PLA2_Node costNode = new PLA2_Node(costItemName, this, shortenedPath, sourceItems, ExistingNodeItemNames);
+                    vitalTradeCostNodes.Add(costNode);
+                }
+                else
+                {
+                    Console.WriteLine($"Node already exists for {costItemName}, skipping");
+                }
             }
 
             return vitalTradeCostNodes;

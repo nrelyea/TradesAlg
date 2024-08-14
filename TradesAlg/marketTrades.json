@@ -1,0 +1,677 @@
+[
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 75
+      }
+    ],
+    "result": [
+      {
+        "name": "medium-rechargeable-battery",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 500
+      }
+    ],
+    "result": [
+      {
+        "name": "wind-turbine",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 40
+      }
+    ],
+    "result": [
+      {
+        "name": "roadsign-gloves",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 40
+      }
+    ],
+    "result": [
+      {
+        "name": "locker",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 5
+      }
+    ],
+    "result": [
+      {
+        "name": "tuna-can-lamp",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 25
+      }
+    ],
+    "result": [
+      {
+        "name": "salvaged-shelves",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 40
+      }
+    ],
+    "result": [
+      {
+        "name": "drop-box",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "red-keycard",
+        "quantity": 1
+      }
+    ],
+    "result": [
+      {
+        "name": "scrap",
+        "quantity": 80
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "blue-keycard",
+        "quantity": 1
+      }
+    ],
+    "result": [
+      {
+        "name": "scrap",
+        "quantity": 40
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "green-keycard",
+        "quantity": 1
+      }
+    ],
+    "result": [
+      {
+        "name": "scrap",
+        "quantity": 15
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "anti-radiation-pills",
+        "quantity": 1
+      }
+    ],
+    "result": [
+      {
+        "name": "scrap",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "high-quality-metal",
+        "quantity": 1
+      }
+    ],
+    "result": [
+      {
+        "name": "scrap",
+        "quantity": 2
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "metal-fragments",
+        "quantity": 20
+      }
+    ],
+    "result": [
+      {
+        "name": "scrap",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "crude-oil",
+        "quantity": 6
+      }
+    ],
+    "result": [
+      {
+        "name": "scrap",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 300
+      }
+    ],
+    "result": [
+      {
+        "name": "16x-zoom-scope",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 400
+      }
+    ],
+    "result": [
+      {
+        "name": "m39-rifle",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 250
+      }
+    ],
+    "result": [
+      {
+        "name": "night-vision-goggles",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 8
+      }
+    ],
+    "result": [
+      {
+        "name": "f1-grenade",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 250
+      }
+    ],
+    "result": [
+      {
+        "name": "spas-12-shotgun",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 250
+      }
+    ],
+    "result": [
+      {
+        "name": "m92-pistol",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 500
+      }
+    ],
+    "result": [
+      {
+        "name": "lr-300-assault-rifle",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 175
+      }
+    ],
+    "result": [
+      {
+        "name": "mixing-table",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 15
+      }
+    ],
+    "result": [
+      {
+        "name": "40mm-shotgun-round",
+        "quantity": 6
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 10
+      }
+    ],
+    "result": [
+      {
+        "name": "corn-seed",
+        "quantity": 20
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 5
+      }
+    ],
+    "result": [
+      {
+        "name": "water-jug",
+        "quantity": 20
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 1
+      }
+    ],
+    "result": [
+      {
+        "name": "pickles",
+        "quantity": 6
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 10
+      }
+    ],
+    "result": [
+      {
+        "name": "can-of-tuna",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "fertilizer",
+        "quantity": 2
+      }
+    ],
+    "result": [
+      {
+        "name": "scrap",
+        "quantity": 3
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "small-trout",
+        "quantity": 1
+      }
+    ],
+    "result": [
+      {
+        "name": "scrap",
+        "quantity": 5
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "cloth",
+        "quantity": 80
+      }
+    ],
+    "result": [
+      {
+        "name": "scrap",
+        "quantity": 10
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "corn",
+        "quantity": 15
+      }
+    ],
+    "result": [
+      {
+        "name": "scrap",
+        "quantity": 10
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 30
+      }
+    ],
+    "result": [
+      {
+        "name": "ceiling-light",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 30
+      }
+    ],
+    "result": [
+      {
+        "name": "fluid-splitter",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 30
+      }
+    ],
+    "result": [
+      {
+        "name": "fluid-switch-&-pump",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 15
+      }
+    ],
+    "result": [
+      {
+        "name": "sprinkler",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 30
+      }
+    ],
+    "result": [
+      {
+        "name": "water-barrel",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 30
+      }
+    ],
+    "result": [
+      {
+        "name": "large-planter-box",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 30
+      }
+    ],
+    "result": [
+      {
+        "name": "composter",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 70
+      }
+    ],
+    "result": [
+      {
+        "name": "hot-air-balloon-armor",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 150
+      }
+    ],
+    "result": [
+      {
+        "name": "modular-car-lift",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 65
+      }
+    ],
+    "result": [
+      {
+        "name": "medium-quality-carburetor",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 40
+      }
+    ],
+    "result": [
+      {
+        "name": "medium-quality-spark-plugs",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 40
+      }
+    ],
+    "result": [
+      {
+        "name": "medium-quality-valves",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 65
+      }
+    ],
+    "result": [
+      {
+        "name": "medium-quality-crankshaft",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "bandit-camp",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 40
+      }
+    ],
+    "result": [
+      {
+        "name": "medium-quality-pistons",
+        "quantity": 1
+      }
+    ]
+  }
+]
