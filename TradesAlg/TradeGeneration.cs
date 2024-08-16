@@ -61,7 +61,7 @@ namespace TradesAlg
                     var resultItem = tradeObj["result"][0];
                     newMarketTrade.ResultItems.Add(new Item(resultItem.Value<string>("name"), resultItem.Value<int>("quantity")));
 
-                    Console.WriteLine($"Market trade: " + newMarketTrade.AdvancedStringSummary(1));
+                    //Console.WriteLine($"Market trade: " + newMarketTrade.AdvancedStringSummary(1));
                     GeneratedTrades.Add(newMarketTrade);
                 }                
             }
@@ -144,7 +144,7 @@ namespace TradesAlg
             }
 
             // Add the completed Recycle Trade to the GeneratedTrades List
-            Console.WriteLine(newRecycleTrade.AdvancedStringSummary(1));
+            //Console.WriteLine(newRecycleTrade.AdvancedStringSummary(1));
             GeneratedTrades.Add(newRecycleTrade);
         }
 

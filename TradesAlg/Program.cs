@@ -22,7 +22,7 @@ class Program
 
         // Target item & quantity criteria
         string targetName = "cloth";
-        int targetAmount = 54;
+        int targetAmount = 52;
 
         // Trades list generation criteria
         int workBenchLevel = 3;
@@ -54,10 +54,10 @@ class Program
         PathGeneration pg = new PathGeneration();
 
         // find all possible trades!
-        int depth = 3;
+        int depth = 5;
         List<List<Trade>> pathList = pg.FindTrades(inventory, allTradesList, targetName, depth);
         
-
+        pathList = pg.RemoveGarbagePaths(pathList);
         
         if(pathList != null && pathList.Count > 0)
         {

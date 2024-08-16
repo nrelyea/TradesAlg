@@ -24,7 +24,7 @@ namespace TradesAlg
 
         public void PrintOptionSummary()
         {
-            Console.WriteLine($"Path length: {Path.Count}  TradeCounts #: {TradeCounts.Count}");
+            //Console.WriteLine($"Path length: {Path.Count}  TradeCounts #: {TradeCounts.Count}");
             
             for(int i = 0; i < Path.Count; i++)
             {
