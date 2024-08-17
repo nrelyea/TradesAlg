@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -11,8 +12,13 @@ namespace TradesAlg
         public PathGeneration() { }
 
         public List<List<Trade>> FindTrades(List<Item> inventory, List<Trade> trades, string targetItemName, int depth, List<string> analyzedTargetItems = null)
-        {
-            if (depth <= 0) return null;    // stop path search if depth has been reached
+        {          
+            // stop path search if depth has been reached
+            if (depth <= 0)
+            {
+                //Console.WriteLine($"Max depth hit while searching this branch for {targetItemName} Trades");
+                return null;
+            }    
             
             // start tracking already analyzed target items if needed
             if (analyzedTargetItems == null)
@@ -57,7 +63,7 @@ namespace TradesAlg
                         foreach (Item costItem in trade.CostItems)
                         {
                             string costItemName = costItem.Name;
-                            //Console.WriteLine($"--- Checking trades for {targetItemName} cost item {costItemName}");
+                            //Console.WriteLine($"--- Checking trades for {targetItemName} cost item {costItemName} at depth {depth}");
 
                             // create a new list including the current target item and already analyzed target items to pass to the recurssive FindTrades call
                             List<string> updatedAnalyzedTargetItems = new List<string> { targetItemName };
@@ -81,7 +87,7 @@ namespace TradesAlg
                             // only consider trades for that cost item if it has not yet been analyzed as a target item
                             if (!analyzedTargetItems.Contains(costItemName))
                             {
-                                //Console.WriteLine($"Recursive call #{count}  Number of items already analyzed: {analyzedTargetItems.Count}");
+                                //Console.WriteLine($"Number of items already analyzed: {analyzedTargetItems.Count}");
                                 List<List<Trade>> costItemTrades = FindTrades(inventory, trades, costItemName, depth - 1, updatedAnalyzedTargetItems);
                                 if (costItemTrades != null)
                                 {
@@ -180,17 +186,64 @@ namespace TradesAlg
             return distinctPathList;
         }
 
+        public List<List<Trade>> RemoveGarbagePaths(List<List<Trade>> pathList)
+        {
+            Console.WriteLine("\n --- TAKING OUT THE TRASH ---");
+
+            if (pathList == null) return pathList;
+
+            // remove paths that include recycling and crafting of same item
+            for(int i = pathList.Count - 1; i >= 0; i--)
+            {
+                HashSet<string> recycledItems = new HashSet<string>();
+                HashSet<string> craftedItems = new HashSet<string>();
+                foreach(Trade trade in pathList[i])
+                {
+                    if(trade.Category == "Recycle")
+                    {
+                        if (craftedItems.Contains(trade.CostItems[0].Name))
+                        {
+                            //Console.WriteLine($"Redundant trade: {trade.StringSummary()}\nRemoving this garbage path:");
+                            //PrintPath(pathList[i]);
+                            pathList.RemoveAt(i);
+                            break;
+                        }
+                        recycledItems.Add(trade.CostItems[0].Name);
+                    }
+                    else if (trade.Category == "Craft")
+                    {
+                        if (recycledItems.Contains(trade.ResultItems[0].Name))
+                        {
+                            //Console.WriteLine($"Redundant trade: {trade.StringSummary()}\nRemoving this garbage path:");
+                            //PrintPath(pathList[i]);
+                            pathList.RemoveAt(i);
+                            break;
+                        }
+                        craftedItems.Add(trade.ResultItems[0].Name);
+                    }
+                }
+
+            }
+
+            return pathList;
+        }
+
         public void PrintPathList(List<List<Trade>> pathList)
         {
             foreach (List<Trade> path in pathList)
             {
-                List<string> strList = new List<string>();
-                foreach (Trade trade in path)
-                {
-                    strList.Add(trade.StringSummary());
-                }
-                Console.WriteLine($"Trade Path: {string.Join(" -> ", strList)}");
+                PrintPath(path);
             }
+        }
+
+        private void PrintPath(List<Trade> path)
+        {
+            List<string> strList = new List<string>();
+            foreach (Trade trade in path)
+            {
+                strList.Add(trade.StringSummary());
+            }
+            Console.WriteLine($"Trade Path: {string.Join(" -> ", strList)}");
         }
     }
 }

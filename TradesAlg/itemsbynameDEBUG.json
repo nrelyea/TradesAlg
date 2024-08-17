@@ -1,0 +1,244 @@
+{
+  "parachute": {
+    "group": "clothing",
+    "identifier": 602628465,
+    "name": "parachute",
+    "shortname": "parachute",
+    "description": "Once equipped, press [+jump] while in mid-air to pull the cord. Must be repacked after use. Must be at least 15m above the ground in order to deploy.",
+    "craftData": {
+      "yield": 1,
+      "workbench": 2,
+      "craftTime": {
+        "craftTime": {
+          "short": 7,
+          "long": 15
+        }
+      },
+      "recipie": {
+        "totalCraftCost": 54,
+        "craftCost": [
+          {
+            "name": "tarp",
+            "amount": 2
+          },
+          {
+            "name": "sewing-kit",
+            "amount": 2
+          },
+          {
+            "name": "cloth",
+            "amount": 50
+          }
+        ]
+      }
+    },
+    "recycleData": {
+      "recycleYieldrad": [
+        {
+          "name": "tarp",
+          "amount": 2
+        },
+        {
+          "name": "sewing-kit",
+          "amount": 2
+        },
+        {
+          "name": "cloth",
+          "amount": 30
+        }
+      ],
+      "recycleYieldsafe": [
+        {
+          "name": "tarp",
+          "amount": 1
+        },
+        {
+          "name": "sewing-kit",
+          "amount": 1
+        },
+        {
+          "name": "cloth",
+          "amount": 20
+        }
+      ]
+    }
+  },
+  "jacket": {
+    "group": "clothing",
+    "identifier": -1163532624,
+    "name": "jacket",
+    "shortname": "jacket",
+    "description": "Though not as widely employed as its wooden counterpart, the jacket bridges the gap dividing the aforementioned and road sign. It offers superior projectile resistance to its predecessors, and founds the melee resistance that will remain static up through to the metal chest plate.",
+    "craftData": {
+      "yield": 1,
+      "workbench": 1,
+      "craftTime": {
+        "craftTime": {
+          "short": 7,
+          "long": 30
+        }
+      },
+      "recipie": {
+        "totalCraftCost": 52,
+        "craftCost": [
+          {
+            "name": "cloth",
+            "amount": 50
+          },
+          {
+            "name": "sewing-kit",
+            "amount": 2
+          }
+        ]
+      }
+    },
+    "recycleData": {
+      "recycleYieldrad": [
+        {
+          "name": "cloth",
+          "amount": 30
+        },
+        {
+          "name": "sewing-kit",
+          "amount": 2
+        }
+      ],
+      "recycleYieldsafe": [
+        {
+          "name": "cloth",
+          "amount": 20
+        },
+        {
+          "name": "sewing-kit",
+          "amount": 1
+        }
+      ]
+    }
+  },
+  "tarp": {
+    "group": "components",
+    "identifier": 2019042823,
+    "name": "tarp",
+    "shortname": "tarp",
+    "description": "Tarps are used for the crafting of planter boxes, and water catchers. They can also be recycled for 50x cloth each. These are very common and can prove to be a good source of cloth.",
+    "craftData": {},
+    "recycleData": {
+      "recycleYieldrad": [
+        {
+          "name": "cloth",
+          "amount": 60
+        }
+      ],
+      "recycleYieldsafe": [
+        {
+          "name": "cloth",
+          "amount": 40
+        }
+      ]
+    }
+  },
+  "taxi-vehicle-module": {
+    "group": "components",
+    "identifier": -626174997,
+    "name": "taxi-vehicle-module",
+    "shortname": "vehicle.1mod.taxi",
+    "description": "Single module seating for two passengers, with a window and a shop front at the front.",
+    "craftData": {
+      "yield": 1,
+      "workbench": 2,
+      "craftTime": {
+        "craftTime": {
+          "short": 15,
+          "long": 30
+        }
+      },
+      "recipie": {
+        "totalCraftCost": 305,
+        "craftCost": [
+          {
+            "name": "metal-fragments",
+            "amount": 175
+          },
+          {
+            "name": "wood",
+            "amount": 125
+          },
+          {
+            "name": "high-quality-metal",
+            "amount": 5
+          }
+        ]
+      }
+    },
+    "recycleData": {
+      "recycleYieldrad": [
+        {
+          "name": "metal-fragments",
+          "amount": 105
+        },
+        {
+          "name": "metal-fragments",
+          "amount": 105
+        },
+        {
+          "name": "wood",
+          "amount": 75
+        },
+        {
+          "name": "wood",
+          "amount": 75
+        },
+        {
+          "name": "high-quality-metal",
+          "amount": 3
+        },
+        {
+          "name": "high-quality-metal",
+          "amount": 3
+        },
+        {
+          "name": "metal-fragments",
+          "amount": 87
+        },
+        {
+          "name": "wood",
+          "amount": 62
+        }
+      ],
+      "recycleYieldsafe": [
+        {
+          "name": "metal-fragments",
+          "amount": 87
+        },
+        {
+          "name": "metal-fragments",
+          "amount": 70
+        },
+        {
+          "name": "wood",
+          "amount": 62
+        },
+        {
+          "name": "wood",
+          "amount": 50
+        },
+        {
+          "name": "high-quality-metal",
+          "amount": 2
+        },
+        {
+          "name": "high-quality-metal",
+          "amount": 2
+        },
+        {
+          "name": "metal-fragments",
+          "amount": 70
+        },
+        {
+          "name": "wood",
+          "amount": 50
+        }
+      ]
+    }
+  }
+}

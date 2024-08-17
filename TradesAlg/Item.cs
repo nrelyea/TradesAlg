@@ -9,9 +9,9 @@ namespace TradesAlg
     public class Item
     {
         public string Name;
-        public int Quantity;
+        public double Quantity;
 
-        public Item(string name, int quantity)
+        public Item(string name, double quantity)
         {
             Name = name;
             Quantity = quantity;

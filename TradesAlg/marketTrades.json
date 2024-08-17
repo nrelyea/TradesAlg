@@ -370,7 +370,7 @@
     "result": [
       {
         "name": "water-jug",
-        "quantity": 20
+        "quantity": 1
       }
     ]
   },
@@ -670,6 +670,696 @@
     "result": [
       {
         "name": "medium-quality-pistons",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "cloth",
+        "quantity": 30
+      }
+    ],
+    "result": [
+      {
+        "name": "rope",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 15
+      }
+    ],
+    "result": [
+      {
+        "name": "metal-blade",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 30
+      }
+    ],
+    "result": [
+      {
+        "name": "metal-pipe",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 60
+      }
+    ],
+    "result": [
+      {
+        "name": "metal-spring",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 125
+      }
+    ],
+    "result": [
+      {
+        "name": "gears",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 30
+      }
+    ],
+    "result": [
+      {
+        "name": "sheet-metal",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "low-grade-fuel",
+        "quantity": 300
+      }
+    ],
+    "result": [
+      {
+        "name": "diesel-fuel",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 10
+      }
+    ],
+    "result": [
+      {
+        "name": "low-grade-fuel",
+        "quantity": 20
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "stones",
+        "quantity": 150
+      }
+    ],
+    "result": [
+      {
+        "name": "wood",
+        "quantity": 500
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "wood",
+        "quantity": 500
+      }
+    ],
+    "result": [
+      {
+        "name": "stones",
+        "quantity": 150
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 25
+      }
+    ],
+    "result": [
+      {
+        "name": "metal-fragments",
+        "quantity": 250
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 20
+      }
+    ],
+    "result": [
+      {
+        "name": "wood",
+        "quantity": 1000
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 50
+      }
+    ],
+    "result": [
+      {
+        "name": "stone",
+        "quantity": 1000
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 50
+      }
+    ],
+    "result": [
+      {
+        "name": "igniter",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 75
+      }
+    ],
+    "result": [
+      {
+        "name": "large-solar-panel",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 75
+      }
+    ],
+    "result": [
+      {
+        "name": "tesla-coil",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 125
+      }
+    ],
+    "result": [
+      {
+        "name": "small-generator",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 300
+      }
+    ],
+    "result": [
+      {
+        "name": "computer-station",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 350
+      }
+    ],
+    "result": [
+      {
+        "name": "large-furnace",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 125
+      }
+    ],
+    "result": [
+      {
+        "name": "small-oil-refinery",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 75
+      }
+    ],
+    "result": [
+      {
+        "name": "sam-ammo",
+        "quantity": 6
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 500
+      }
+    ],
+    "result": [
+      {
+        "name": "sam-site",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 250
+      }
+    ],
+    "result": [
+      {
+        "name": "double-barrel-shotgun",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 200
+      }
+    ],
+    "result": [
+      {
+        "name": "revolver",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 400
+      }
+    ],
+    "result": [
+      {
+        "name": "auto-turret",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 250
+      }
+    ],
+    "result": [
+      {
+        "name": "flame-turret",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 150
+      }
+    ],
+    "result": [
+      {
+        "name": "shotgun-trap",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 40
+      }
+    ],
+    "result": [
+      {
+        "name": "tactical-gloves",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 20
+      }
+    ],
+    "result": [
+      {
+        "name": "boots",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 20
+      }
+    ],
+    "result": [
+      {
+        "name": "snow-jacket",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 10
+      }
+    ],
+    "result": [
+      {
+        "name": "longsleeve-t-shirt",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 5
+      }
+    ],
+    "result": [
+      {
+        "name": "t-shirt",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 75
+      }
+    ],
+    "result": [
+      {
+        "name": "rf-transmitter",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 150
+      }
+    ],
+    "result": [
+      {
+        "name": "jackhammer",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 100
+      }
+    ],
+    "result": [
+      {
+        "name": "blue-keycard",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 75
+      }
+    ],
+    "result": [
+      {
+        "name": "rf-pager",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 125
+      }
+    ],
+    "result": [
+      {
+        "name": "chainsaw",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 40
+      }
+    ],
+    "result": [
+      {
+        "name": "hatchet",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 50
+      }
+    ],
+    "result": [
+      {
+        "name": "pickaxe",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 5
+      }
+    ],
+    "result": [
+      {
+        "name": "smoke-grenade",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 75
+      }
+    ],
+    "result": [
+      {
+        "name": "electric-heater",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 150
+      }
+    ],
+    "result": [
+      {
+        "name": "powered-water-purifier",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 30
+      }
+    ],
+    "result": [
+      {
+        "name": "fluid-combiner",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 200
+      }
+    ],
+    "result": [
+      {
+        "name": "water-pump",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 30
+      }
+    ],
+    "result": [
+      {
+        "name": "fluid-splitter",
+        "quantity": 1
+      }
+    ]
+  },
+  {
+    "market": "outpost",
+    "cost": [
+      {
+        "name": "scrap",
+        "quantity": 30
+      }
+    ],
+    "result": [
+      {
+        "name": "fluid-switch-&-pump",
         "quantity": 1
       }
     ]

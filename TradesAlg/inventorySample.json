@@ -1,11 +1,11 @@
 [
   {
     "Name": "scrap",
-    "Quantity": 0
+    "Quantity": 99
   },
   {
     "Name": "jacket",
-    "Quantity": 99
+    "Quantity": 0
   },
   {
     "Name": "sewing-kit",
@@ -25,6 +25,10 @@
   },
   {
     "Name": "f1-grenade",
+    "Quantity": 0
+  },
+  {
+    "Name": "assault-rifle",
     "Quantity": 0
   }
 ]
