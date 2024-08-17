@@ -313,7 +313,7 @@ namespace TradesAlg
         public void PrintOptionPackageList(List<OptionPackage> optionPackageList, int maxOptions)
         {
             Console.WriteLine($"\nValid Options: {optionPackageList.Count}");
-            for(int i = 0; i < optionPackageList.Count && i < maxOptions; i++)
+            for(int i = 0; i < optionPackageList.Count && (i < maxOptions || maxOptions == -1); i++)
             {
                 Console.WriteLine($"\n--- OPTION #{i + 1} of {optionPackageList.Count}:");
                 if(optionPackageList[i].ContainsProbability) Console.WriteLine("WARNING: Cost is approximate, as this option includes recycling item(s) with probability-based yield(s)\n");

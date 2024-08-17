@@ -60,7 +60,7 @@ namespace TradesAlg
                     var resultItem = tradeObj["result"][0];
                     newMarketTrade.ResultItems.Add(new Item(resultItem.Value<string>("name"), resultItem.Value<double>("quantity")));
 
-                    //Console.WriteLine($"Market trade: " + newMarketTrade.AdvancedStringSummary(1));
+                    if(Criteria.LoggingEnabled) Console.WriteLine($"Market trade: " + newMarketTrade.AdvancedStringSummary(1));
                     GeneratedTrades.Add(newMarketTrade);
                 }                
             }

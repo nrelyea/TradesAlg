@@ -70,12 +70,11 @@ namespace TradesAlg
             foreach (Item costItem in CostItems)
             {
                 string costItemName = costItem.Name;
-                double costItemQuantity = costItem.Quantity;
 
                 bool isPossible = false;
                 foreach(Item item in inventory)
                 {
-                    if (item.Name == costItemName && item.Quantity >= costItemQuantity)
+                    if (item.Name == costItemName)
                     {
                         isPossible = true;
                     }

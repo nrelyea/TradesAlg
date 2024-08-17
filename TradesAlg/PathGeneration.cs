@@ -32,7 +32,7 @@ namespace TradesAlg
                 foreach (Item resultItem in trade.ResultItems)
                 {
                     if (resultItem.Name == targetItemName)
-                    {
+                    {                       
                         //Console.WriteLine($"- target trade found: {trade.StringSummary()}");
                         targetTrades.Add(trade);
                         break;
@@ -194,7 +194,7 @@ namespace TradesAlg
 
             // remove paths that include recycling and crafting of same item
             for(int i = pathList.Count - 1; i >= 0; i--)
-            {
+            {              
                 HashSet<string> recycledItems = new HashSet<string>();
                 HashSet<string> craftedItems = new HashSet<string>();
                 foreach(Trade trade in pathList[i])

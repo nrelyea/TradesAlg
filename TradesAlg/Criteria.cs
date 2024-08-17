@@ -21,6 +21,8 @@ namespace TradesAlg
         public const bool OutPostTradesEnabled = true;
         public const bool BanditTradesEnabled = true;
 
+
+
         // source files for parsing / gathering item & trade data
         public const string ItemsJSON = "itemsbyname.json";
         public const string MarketTradesJSON = "marketTrades.json";
