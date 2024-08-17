@@ -21,7 +21,7 @@ namespace TradesAlg
 
         public List<Trade> GeneratedTrades;
         
-        public TradeGeneration(int workBenchLevel, bool safeZoneRecycler, bool outpostTradesEnabled, bool banditTradesEnabled, string itemDataPath, string marketDataPath, string generatedTradesPath)
+        public TradeGeneration(int workBenchLevel, bool safeZoneRecycler, bool outpostTradesEnabled, bool banditTradesEnabled, string itemDataPath, string marketDataPath)
         {
             WorkBenchLevel = workBenchLevel;
             SafeZoneRecycler = safeZoneRecycler;
@@ -29,7 +29,6 @@ namespace TradesAlg
             BanditTradesEnabled = banditTradesEnabled;
             ItemDataPath = itemDataPath;
             MarketDataPath = marketDataPath;
-            GeneratedTradesPath = generatedTradesPath;
 
             GeneratedTrades = new List<Trade>();
 

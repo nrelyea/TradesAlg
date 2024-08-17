@@ -14,49 +14,25 @@ class Program
         // Path to Program.cs class
         string programDir = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "..");
 
-
-
         // Load Inventory data
-        //List<Item> inventory = LoadInventory(Path.Combine(programDir, "inventoryDebug.json"));
-        List<Item> inventory = LoadInventory(Path.Combine(programDir, "inventorySample.json"));
+        //List<Item> inventory = LoadInventoryFromPath(Path.Combine(programDir, "inventorySample.json"));
+        List<Item> inventory = LoadInventoryFromCriteria(Criteria.InventoryItemNames);
 
-        // Target item & quantity criteria
-        string targetName = "crossbow";
-        int targetAmount = 4;
-
-        // Trades list generation criteria
-        int workBenchLevel = 3;
-        bool safeZoneRecycler = true;
-        bool outPostTradesEnabled = true;
-        bool banditTradesEnabled = true;
-        string itemDataPath = Path.Combine(programDir, "itemsbyname.json");
-        string marketDataPath = Path.Combine(programDir, "marketTrades.json");
-
-        string generatedTradesPath = Path.Combine(programDir, "tradesGenerated.json");
-
-        TradeGeneration tg = new TradeGeneration(
-            workBenchLevel, safeZoneRecycler, outPostTradesEnabled, banditTradesEnabled, itemDataPath, marketDataPath, generatedTradesPath
+       // generate full list of possible Trades
+       TradeGeneration tg = new TradeGeneration(
+            Criteria.WorkBenchLevel,
+            Criteria.SafeZoneRecycler,
+            Criteria.OutPostTradesEnabled,
+            Criteria.BanditTradesEnabled,
+            Path.Combine(programDir, Criteria.ItemsJSON),
+            Path.Combine(programDir, Criteria.MarketTradesJSON)
         );
-
         List<Trade> allTradesList = tg.GeneratedTrades;
-
         Console.WriteLine($"Trades generated: {allTradesList.Count}");
 
-
-        // Load Trades data
-        //List<Trade> allTradesList = LoadTradesList(Path.Combine(programDir, "tradesDebug.json"));
-        //List<Trade> allTradesList = LoadTradesList(Path.Combine(programDir, "tradesSample.json"));
-
-
-
-
-
-        PathGeneration pg = new PathGeneration();
-
         // find all possible trades!
-        int depth = 4;
-        List<List<Trade>> pathList = pg.FindTrades(inventory, allTradesList, targetName, depth);
-        
+        PathGeneration pg = new PathGeneration();
+        List<List<Trade>> pathList = pg.FindTrades(inventory, allTradesList, Criteria.TargetItemName, Criteria.SearchDepth);       
         pathList = pg.RemoveGarbagePaths(pathList);
         
         if(pathList != null && pathList.Count > 0)
@@ -73,18 +49,12 @@ class Program
             return;
         }
 
-
-
-
-
-
         // Determine full option packages with upfront costs of each trade path as a dictionary of cost items and their amount
         Console.WriteLine("Calculating upfront costs for all valid options...");
         PathListAnalysis3 pla3 = new PathListAnalysis3();
-        List<OptionPackage> optionPackageList = pla3.AllOptionPackages(inventory, pathList, targetName, targetAmount);
+        List<OptionPackage> optionPackageList = pla3.AllOptionPackages(inventory, pathList, Criteria.TargetItemName, Criteria.TargetItemAmount);
 
-        int maxOptions = 100;
-        pla3.PrintOptionPackageList(optionPackageList, maxOptions);
+        pla3.PrintOptionPackageList(optionPackageList, Criteria.MaxOptionsListed);
 
 
 
@@ -101,7 +71,7 @@ class Program
 
     
 
-    static List<Item> LoadInventory(string jsonFilePath)
+    static List<Item> LoadInventoryFromPath(string jsonFilePath)
     {
         // Read the JSON file
         string jsonContent = File.ReadAllText(jsonFilePath);
@@ -117,6 +87,18 @@ class Program
             int itemQuantity = item.Value<int>("Quantity");
             Console.WriteLine($"Inventory item: {itemQuantity} {itemName}");
             inventory.Add(new Item(itemName, itemQuantity));
+        }
+
+        return inventory;
+    }
+
+    static List<Item> LoadInventoryFromCriteria(List<string> invStringList)
+    {
+        List<Item> inventory = new List<Item>();
+
+        foreach(string itemName in invStringList)
+        {
+            inventory.Add(new Item(itemName, 99));
         }
 
         return inventory;

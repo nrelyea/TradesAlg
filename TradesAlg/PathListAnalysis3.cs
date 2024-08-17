@@ -11,8 +11,6 @@ namespace TradesAlg
 {
     public class PathListAnalysis3
     {
-        private bool LoggingEnabled = false;
-
         public PathListAnalysis3() { }
 
         public List<OptionPackage> AllOptionPackages(List<Item> inventory, List<List<Trade>> pathList, string targetName, int targetAmount)
@@ -21,9 +19,9 @@ namespace TradesAlg
 
             for(int i = 0; i < pathList.Count; i++)
             {
-                if(LoggingEnabled) Console.WriteLine($"\nPath #{i+1}:");
-                if(LoggingEnabled) PrintPath(pathList[i]);
-                OptionPackage optionPackage = GenerateOptionPackage(inventory, pathList[i], targetName, targetAmount, LoggingEnabled);
+                if(Criteria.LoggingEnabled) Console.WriteLine($"\nPath #{i+1}:");
+                if(Criteria.LoggingEnabled) PrintPath(pathList[i]);
+                OptionPackage optionPackage = GenerateOptionPackage(inventory, pathList[i], targetName, targetAmount, Criteria.LoggingEnabled);
                 if(optionPackage != null) optionPackageList.Add(optionPackage);
             }
 
