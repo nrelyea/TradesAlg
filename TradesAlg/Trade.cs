@@ -51,14 +51,14 @@ namespace TradesAlg
                     List<string> costItemStrings = new List<string>();
                     foreach (Item costItem in CostItems)
                     {
-                        costItemStrings.Add($"{multiplier * costItem.Quantity}x {costItem.Name}");
+                        costItemStrings.Add($"{Math.Round(multiplier * costItem.Quantity, 2)}x {costItem.Name}");
                     }
                     return $"Use {String.Join(", ",costItemStrings.ToArray())} to Craft {multiplier * ResultItems[0].Quantity}x {ResultItems[0].Name}";
                 default:
                     List<string> resultItemStrings = new List<string>();
                     foreach (Item resultItem in ResultItems)
                     {
-                        resultItemStrings.Add($"{multiplier * resultItem.Quantity}x {resultItem.Name}");
+                        resultItemStrings.Add($"{Math.Round(multiplier * resultItem.Quantity, 2)}x {resultItem.Name}");
                     }
                     return $"Recycle {multiplier * CostItems[0].Quantity}x {CostItems[0].Name} to get {String.Join(", ", resultItemStrings.ToArray())}";
 
@@ -70,7 +70,7 @@ namespace TradesAlg
             foreach (Item costItem in CostItems)
             {
                 string costItemName = costItem.Name;
-                int costItemQuantity = costItem.Quantity;
+                double costItemQuantity = costItem.Quantity;
 
                 bool isPossible = false;
                 foreach(Item item in inventory)

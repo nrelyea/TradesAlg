@@ -21,8 +21,8 @@ class Program
         List<Item> inventory = LoadInventory(Path.Combine(programDir, "inventorySample.json"));
 
         // Target item & quantity criteria
-        string targetName = "cloth";
-        int targetAmount = 52;
+        string targetName = "crossbow";
+        int targetAmount = 4;
 
         // Trades list generation criteria
         int workBenchLevel = 3;
@@ -54,7 +54,7 @@ class Program
         PathGeneration pg = new PathGeneration();
 
         // find all possible trades!
-        int depth = 5;
+        int depth = 4;
         List<List<Trade>> pathList = pg.FindTrades(inventory, allTradesList, targetName, depth);
         
         pathList = pg.RemoveGarbagePaths(pathList);
@@ -65,7 +65,7 @@ class Program
             pathList = pg.RemoveDuplicateSteps(pathList);
             
             Console.WriteLine($"\nTrade is possible!\nPaths found: {pathList.Count}\n");
-            pg.PrintPathList(pathList);
+            //pg.PrintPathList(pathList);
         }
         else
         {
@@ -79,11 +79,12 @@ class Program
 
 
         // Determine full option packages with upfront costs of each trade path as a dictionary of cost items and their amount
-
+        Console.WriteLine("Calculating upfront costs for all valid options...");
         PathListAnalysis3 pla3 = new PathListAnalysis3();
         List<OptionPackage> optionPackageList = pla3.AllOptionPackages(inventory, pathList, targetName, targetAmount);
 
-        pla3.PrintOptionPackageList(optionPackageList);
+        int maxOptions = 100;
+        pla3.PrintOptionPackageList(optionPackageList, maxOptions);
 
 
 

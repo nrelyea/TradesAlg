@@ -56,10 +56,10 @@ namespace TradesAlg
                     Trade newMarketTrade = new Trade("Sell", new List<Item> { }, new List<Item> { });
 
                     var costItem = tradeObj["cost"][0];
-                    newMarketTrade.CostItems.Add(new Item(costItem.Value<string>("name"), costItem.Value<int>("quantity")));
+                    newMarketTrade.CostItems.Add(new Item(costItem.Value<string>("name"), costItem.Value<double>("quantity")));
 
                     var resultItem = tradeObj["result"][0];
-                    newMarketTrade.ResultItems.Add(new Item(resultItem.Value<string>("name"), resultItem.Value<int>("quantity")));
+                    newMarketTrade.ResultItems.Add(new Item(resultItem.Value<string>("name"), resultItem.Value<double>("quantity")));
 
                     //Console.WriteLine($"Market trade: " + newMarketTrade.AdvancedStringSummary(1));
                     GeneratedTrades.Add(newMarketTrade);
@@ -103,11 +103,11 @@ namespace TradesAlg
             // add each ingredient to the trade
             foreach (var ingredient in ingredientArray)
             {
-                newCraftTrade.CostItems.Add(new Item((string)ingredient["name"], (int)ingredient["amount"]));
+                newCraftTrade.CostItems.Add(new Item((string)ingredient["name"], (double)ingredient["amount"]));
             }
 
             // add resulting item and its yield to the trade
-            newCraftTrade.ResultItems.Add(new Item((string)item["name"], (int)craftData["yield"]));
+            newCraftTrade.ResultItems.Add(new Item((string)item["name"], (double)craftData["yield"]));
 
             // Add the completed Craft Trade to the GeneratedTrades List
             //Console.WriteLine(newCraftTrade.AdvancedStringSummary(1));
@@ -129,7 +129,7 @@ namespace TradesAlg
                 // add each yielded item to the trade results
                 foreach (var yieldedItem in recycleYieldArray)
                 {
-                    newRecycleTrade.ResultItems.Add(new Item((string)yieldedItem["name"], (int)yieldedItem["amount"]));
+                    newRecycleTrade.ResultItems.Add(new Item((string)yieldedItem["name"], (double)yieldedItem["amount"]));
                 }
             }
             else
@@ -139,7 +139,7 @@ namespace TradesAlg
                 // add each yielded item to the trade results
                 foreach (var yieldedItem in recycleYieldArray)
                 {
-                    newRecycleTrade.ResultItems.Add(new Item((string)yieldedItem["name"], (int)yieldedItem["amount"]));
+                    newRecycleTrade.ResultItems.Add(new Item((string)yieldedItem["name"], (double)yieldedItem["amount"]));
                 }
             }
 

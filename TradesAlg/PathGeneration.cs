@@ -189,7 +189,9 @@ namespace TradesAlg
         public List<List<Trade>> RemoveGarbagePaths(List<List<Trade>> pathList)
         {
             Console.WriteLine("\n --- TAKING OUT THE TRASH ---");
-            
+
+            if (pathList == null) return pathList;
+
             // remove paths that include recycling and crafting of same item
             for(int i = pathList.Count - 1; i >= 0; i--)
             {

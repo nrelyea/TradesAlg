@@ -11,6 +11,8 @@ namespace TradesAlg
 {
     public class PathListAnalysis3
     {
+        private bool LoggingEnabled = false;
+
         public PathListAnalysis3() { }
 
         public List<OptionPackage> AllOptionPackages(List<Item> inventory, List<List<Trade>> pathList, string targetName, int targetAmount)
@@ -19,52 +21,59 @@ namespace TradesAlg
 
             for(int i = 0; i < pathList.Count; i++)
             {
-                Console.WriteLine($"\nPath #{i+1}:");
-                PrintPath(pathList[i]);
-                OptionPackage optionPackage = GenerateOptionPackage(inventory, pathList[i], targetName, targetAmount);
+                if(LoggingEnabled) Console.WriteLine($"\nPath #{i+1}:");
+                if(LoggingEnabled) PrintPath(pathList[i]);
+                OptionPackage optionPackage = GenerateOptionPackage(inventory, pathList[i], targetName, targetAmount, LoggingEnabled);
                 if(optionPackage != null) optionPackageList.Add(optionPackage);
             }
 
-            return optionPackageList;
+            // Sort options by ascending cost (cheapest first)
+            optionPackageList.Sort((x, y) => x.IsCheaperThan(y) ? -1 : (y.IsCheaperThan(x) ? 1 : 0));
 
+            return optionPackageList;
         }
 
-        private OptionPackage GenerateOptionPackage(List<Item> inventory, List<Trade> path, string targetName, int targetAmount)
+        private OptionPackage GenerateOptionPackage(List<Item> inventory, List<Trade> path, string targetName, int targetAmount, bool logging)
         {
-            Console.WriteLine($" --- Starting Cost analysis to procure {targetAmount} {targetName} ---");
+            //Console.WriteLine($" --- Starting Cost analysis to procure {targetAmount} {targetName} ---");
 
             HashSet<string> sourceItemNames = SourceItemsFromInventoryDict(inventory);
 
-            
+            OptionPackage optionPackage = TraverseAndSimulateForOptionPackage(path, sourceItemNames, targetName, targetAmount, logging);
 
-
-
-
-            OptionPackage optionPackage = TraverseAndSimulateForOptionPackage(path, sourceItemNames, targetName, targetAmount);
-
-
-            if (optionPackage.TradeCounts.Count != optionPackage.Path.Count) return null;
-
+            if (IsOptionGarbage(optionPackage)) return null;
 
             return optionPackage;
         }
 
-        private OptionPackage TraverseAndSimulateForOptionPackage(List<Trade> path, HashSet<string> sourceItemNames, string targetName, int targetAmount)
+        private bool IsOptionGarbage(OptionPackage optionPackage)
         {
-            //Console.WriteLine($"Analyzing path with length {path.Count}");
+            if (optionPackage == null) return true;
             
-            Dictionary<string, int> activeInventory = new Dictionary<string, int>();
-            Dictionary<string, int> runningCost = new Dictionary<string, int>();
+            if (optionPackage.TradeCounts.Count != optionPackage.Path.Count) return true;
+
+            return false;
+        }
+
+        private OptionPackage TraverseAndSimulateForOptionPackage(List<Trade> path, HashSet<string> sourceItemNames, string targetName, int targetAmount, bool logging)
+        {            
+            if (logging) Console.WriteLine($"Analyzing path with length {path.Count}");
+            
+            Dictionary<string, double> activeInventory = new Dictionary<string, double>();
+            Dictionary<string, double> runningCost = new Dictionary<string, double>();
             Dictionary<Trade, int> tradeCounts = new Dictionary<Trade, int>();
+            bool hasProbability = false;
 
             // generated a list of integer sets, each representing that corresponding Trade (in path)'s Vital Trade indices in the path
-            List<Dictionary<string,int>> listOfCorrespondingIndicesForVitalTrades = GenerateListOfCorrespondingIndicesForVitalTrades(path, targetName, targetAmount);
-            
+            List<Dictionary<string,int>> listOfCorrespondingIndicesForVitalTrades = GenerateListOfCorrespondingIndicesForVitalTrades(path, targetName, targetAmount, logging);
+
+            if (VitalTradeIndicesIndicateGarbagePath(listOfCorrespondingIndicesForVitalTrades, logging)) return null;
+
             for(int i = 0; i < path.Count; i++)
             {
-                Console.WriteLine($"Trade [{i}] ({path[i].StringSummary()})  Vital trade indices: {string.Join(", ", listOfCorrespondingIndicesForVitalTrades[i].Values)}");
+                if (logging) Console.WriteLine($"Trade [{i}] ({path[i].StringSummary()})  Vital trade indices: {string.Join(", ", listOfCorrespondingIndicesForVitalTrades[i].Values)}");
             }
-            Console.WriteLine("--- STARTING TRAVERSAL / SIMULATION NOW ---");
+            if (logging) Console.WriteLine("--- STARTING TRAVERSAL / SIMULATION NOW ---");
 
 
             int lastIndex = path.Count - 1;
@@ -79,15 +88,18 @@ namespace TradesAlg
                 {
                     activeInventory[targetName] = 0;     // Zero out target item quantity in inventory, which is being loaded into OptionPackage as remainder
 
-                    return new OptionPackage(runningCost, path, tradeCounts, activeInventory);     // FINAL UPFRONT COST RETURN
+                    return new OptionPackage(runningCost, path, tradeCounts, activeInventory, hasProbability);     // FINAL UPFRONT COST RETURN
                 }
 
                 // if Trade target is possible, simulate the trade
                 if (SimulateTradeExecution(currentTrade, ref activeInventory))
                 {                   
                     // update Trade Count for this trade as it has been executed
-                    UpdateTradeCount(currentTrade, ref tradeCounts);
-                    PrintActiveInventory(activeInventory);
+                    UpdateTradeCount(currentTrade, logging, ref tradeCounts);
+                    if (logging) PrintActiveInventory(activeInventory);
+
+                    // if trade added contains probabilty, update this flag
+                    if(TradeContainsProbability(currentTrade)) hasProbability = true;
 
                     // after simulating the trade, analyze the final trade again
                     currentTradeEvalIndex = lastIndex;
@@ -95,25 +107,25 @@ namespace TradesAlg
                 }
                 else // if Trade is not possible
                 {
-                    Console.WriteLine($"Trade [{currentTrade.StringSummary()}] not possible");
+                    if(logging) Console.WriteLine($"Trade [{currentTrade.StringSummary()}] not possible");
                     foreach(Item costItem in currentTrade.CostItems)
                     {
                         // if we don't have enough of this cost item to execute the trade
                         if(!activeInventory.ContainsKey(costItem.Name) || activeInventory[costItem.Name] < costItem.Quantity)
                         {
-                            Console.WriteLine($"Need more {costItem.Name} to complete this trade");
+                            if (logging) Console.WriteLine($"Need more {costItem.Name} to complete this trade");
                             // if costItem is a source
                             if (sourceItemNames.Contains(costItem.Name))
                             {
-                                int itemQuantityToAddForTrade = activeInventory.ContainsKey(costItem.Name) ? costItem.Quantity - activeInventory[costItem.Name] : costItem.Quantity;
+                                double itemQuantityToAddForTrade = activeInventory.ContainsKey(costItem.Name) ? costItem.Quantity - activeInventory[costItem.Name] : costItem.Quantity;
 
                                 // add necessary amount to running cost total
-                                Console.WriteLine($"Added {itemQuantityToAddForTrade}x {costItem.Name} to make trade possible");
+                                if (logging) Console.WriteLine($"Added {itemQuantityToAddForTrade}x {costItem.Name} to make trade possible");
                                 runningCost[costItem.Name] = runningCost.ContainsKey(costItem.Name) ? runningCost[costItem.Name] + itemQuantityToAddForTrade : itemQuantityToAddForTrade;
 
                                 // update amount of source item in active inventory
                                 activeInventory[costItem.Name] = costItem.Quantity;
-                                PrintActiveInventory(activeInventory);
+                                if (logging) PrintActiveInventory(activeInventory);
 
                                 // go back to analyzing final trade
                                 currentTradeEvalIndex = lastIndex;
@@ -130,48 +142,62 @@ namespace TradesAlg
                     }
                 }
 
-                // attempt to execute this trade
-                // if successful
-                // set currentTradeEvalIndex to lastIndex
-                // continue;
-                // if not successful
-                // foreach cost Item in this trade
-                // if not enough of this cost item is available to perform the trade
-                // if cost Item is a source
-                // add enough of source item to satisfy the trade
-                // update active inventory
-                // break;
-                // if cost Item is not a source
-                // set currentTradeEvalIndex to the vital Trade index of this costItem
-                // break;
+         
 
             }
-
-
-
-
-
-
-
-
-
 
             Console.WriteLine("%%% ERROR: Terminating Traversal, correct traversal path / condition not found %%%");
             
             return null;
         }
 
-        private void PrintActiveInventory(Dictionary<string, int> inv)
+        private bool VitalTradeIndicesIndicateGarbagePath(List<Dictionary<string, int>> listOfCorrespondingIndicesForVitalTrades, bool logging)
+        {          
+            HashSet<int> vitalTradeIndicesNoted = new HashSet<int>();
+            foreach(Dictionary<string, int> indices in listOfCorrespondingIndicesForVitalTrades)
+            {
+                foreach(KeyValuePair<string, int> kvp in indices)
+                {
+                    vitalTradeIndicesNoted.Add(kvp.Value);
+                }
+            }
+
+            for(int i = 0; i < listOfCorrespondingIndicesForVitalTrades.Count - 1; i++)
+            {
+                if (!vitalTradeIndicesNoted.Contains(i))
+                {
+                    if(logging) Console.WriteLine($"GARBAGE PATH DETECTED! Trade {i + 1} is NOT Vital!");
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void PrintActiveInventory(Dictionary<string, double> inv)
         {
             List<string> invStringList = new List<string>();
-            foreach(KeyValuePair<string,int> item in inv)
+            foreach(KeyValuePair<string, double> item in inv)
             {
                 invStringList.Add($"{item.Value}x {item.Key}");
             }
             Console.WriteLine($"Active Inv: {String.Join(", ", invStringList.ToArray())}");
         }
 
-        private List<Dictionary<string, int>> GenerateListOfCorrespondingIndicesForVitalTrades(List<Trade> path, string targetName, int targetAmount)
+        private bool TradeContainsProbability(Trade trade)
+        {
+            foreach(Item resultItem in trade.ResultItems)
+            {
+                if(resultItem.Quantity < 1)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private List<Dictionary<string, int>> GenerateListOfCorrespondingIndicesForVitalTrades(List<Trade> path, string targetName, int targetAmount, bool logging)
         {
             List<Dictionary<string, int>> listOfCorrespondingIndicesForVitalTrades = new List<Dictionary<string, int>>();
             listOfCorrespondingIndicesForVitalTrades.Add(new Dictionary<string, int>());   // add empty set that will correspond to first Trade in path
@@ -189,7 +215,7 @@ namespace TradesAlg
                         {
                             if(resultItem.Name == costItem.Name)
                             {
-                                Console.WriteLine($"Marking index {j} as a Vital Trade for trade at index {i} ({path[i].StringSummary()})");
+                                if (logging) Console.WriteLine($"Marking index {j} as a Vital Trade for trade at index {i} ({path[i].StringSummary()})");
                                 vitalTradeIndicesForThisTrade.Add(costItem.Name,j);
                                 costItemVitalTradefound = true;
                                 break;
@@ -206,21 +232,21 @@ namespace TradesAlg
             return listOfCorrespondingIndicesForVitalTrades;
         }
 
-        private void UpdateTradeCount(Trade trade, ref Dictionary<Trade, int> counts)
+        private void UpdateTradeCount(Trade trade, bool logging, ref Dictionary<Trade, int> counts)
         {
             if (counts.ContainsKey(trade))
             {
-                Console.WriteLine($"Changing count for Trade: [{trade.StringSummary()}] from {counts[trade]} to {counts[trade] + 1}");
+                if (logging) Console.WriteLine($"Changing count for Trade: [{trade.StringSummary()}] from {counts[trade]} to {counts[trade] + 1}");
                 counts[trade] = counts[trade] + 1;
             }
             else
             {
-                Console.WriteLine($"Adding new trade execution for: [{trade.StringSummary()}]");
+                if (logging) Console.WriteLine($"Adding new trade execution for: [{trade.StringSummary()}]");
                 counts[trade] = 1;
             }
         }
 
-        private int QuantityOfCostItemNeededForTrade(Trade trade, string costItemName)
+        private double QuantityOfCostItemNeededForTrade(Trade trade, string costItemName)
         {
             foreach (Item costItem in trade.CostItems)
             {
@@ -235,7 +261,7 @@ namespace TradesAlg
         }
 
 
-        private bool SimulateTradeExecution(Trade trade, ref Dictionary<string, int> activeInventory)
+        private bool SimulateTradeExecution(Trade trade, ref Dictionary<string, double> activeInventory)
         {
             // Determine if trade is possible
             foreach (Item costItem in trade.CostItems)
@@ -259,6 +285,12 @@ namespace TradesAlg
                 activeInventory[resultItem.Name] = activeInventory.ContainsKey(resultItem.Name) ? activeInventory[resultItem.Name] + resultItem.Quantity : resultItem.Quantity;
             }
 
+            // round each value in active inventory to hundreth's place
+            foreach(KeyValuePair<string, double> kvp in activeInventory)
+            {
+                activeInventory[kvp.Key] = Math.Round(kvp.Value, 2);
+            }
+
             // trade has been verified possible and has been simulated, active inventory is up to date
             return true;
         }
@@ -274,21 +306,22 @@ namespace TradesAlg
                 if (item.Quantity > 0)
                 {
                     sourceItems.Add(item.Name);
-                    Console.WriteLine($"Source item: {item.Name} ({item.Quantity})");
+                    //Console.WriteLine($"Source item: {item.Name} ({item.Quantity})");
                 }
             }
             return sourceItems;
         }
 
-        public void PrintOptionPackageList(List<OptionPackage> optionPackageList)
+        public void PrintOptionPackageList(List<OptionPackage> optionPackageList, int maxOptions)
         {
-            Console.WriteLine("\n");
-            for(int i = 0; i < optionPackageList.Count; i++)
+            Console.WriteLine($"\nValid Options: {optionPackageList.Count}");
+            for(int i = 0; i < optionPackageList.Count && i < maxOptions; i++)
             {
-                Console.WriteLine($"\n--- OPTION #{i + 1}:");
+                Console.WriteLine($"\n--- OPTION #{i + 1} of {optionPackageList.Count}:");
+                if(optionPackageList[i].ContainsProbability) Console.WriteLine("WARNING: Cost is approximate, as this option includes recycling item(s) with probability-based yield(s)\n");
                 PrintPath(optionPackageList[i].Path);
                 Console.WriteLine($"\nTotal upfront cost for this option:");
-                foreach (KeyValuePair<string,int> costPair in optionPackageList[i].UpfrontCost)
+                foreach (KeyValuePair<string, double> costPair in optionPackageList[i].UpfrontCost)
                 {
                     Console.WriteLine($" - {costPair.Value}x {costPair.Key}");
                 }

@@ -26,5 +26,9 @@
   {
     "Name": "f1-grenade",
     "Quantity": 0
+  },
+  {
+    "Name": "assault-rifle",
+    "Quantity": 0
   }
 ]
