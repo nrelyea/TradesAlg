@@ -188,7 +188,7 @@ namespace TradesAlg
 
         public List<List<Trade>> RemoveGarbagePaths(List<List<Trade>> pathList)
         {
-            Console.WriteLine("\n --- TAKING OUT THE TRASH ---");
+            //Console.WriteLine("\n --- TAKING OUT THE TRASH ---");
 
             if (pathList == null) return pathList;
 
@@ -223,6 +223,38 @@ namespace TradesAlg
                     }
                 }
 
+            }
+
+            //remove paths that contain trades which are reversals of eachother
+            for (int i = pathList.Count - 1; i >= 0; i--)
+            {             
+                foreach(Trade tradeA in pathList[i])
+                {
+                    bool reversalTradeDetected = false;
+                    
+                    HashSet<Item> tradeACostItems = new HashSet<Item>(tradeA.CostItems);
+                    HashSet<Item> tradeAResultItems = new HashSet<Item>(tradeA.ResultItems);
+
+                    foreach(Trade tradeB in pathList[i])
+                    {
+                        HashSet<Item> tradeBCostItems = new HashSet<Item>(tradeB.CostItems);
+                        HashSet<Item> tradeBResultItems = new HashSet<Item>(tradeB.ResultItems);
+
+                        if(!tradeA.Equals(tradeB) && tradeACostItems.SetEquals(tradeBResultItems) && tradeAResultItems.SetEquals(tradeBCostItems))
+                        {
+                            //Console.WriteLine("Reversal trade found in the following path:");
+                            //PrintPath(pathList[i]);
+                            //Console.WriteLine($"Problem child trade: {tradeA.StringSummary()}");
+                            reversalTradeDetected=true;
+                        }
+                    }
+
+                    if (reversalTradeDetected)
+                    {
+                        pathList.RemoveAt(i);
+                        break;
+                    }
+                }
             }
 
             return pathList;

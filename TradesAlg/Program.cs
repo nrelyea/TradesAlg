@@ -30,6 +30,11 @@ class Program
         List<Trade> allTradesList = tg.GeneratedTrades;
         Console.WriteLine($"Trades generated: {allTradesList.Count}");
 
+
+        // Generate / Re-Generate All Item Values
+        //ItemValueGeneration ivg = new ItemValueGeneration(programDir, allTradesList);
+
+
         // find all possible trades!
         PathGeneration pg = new PathGeneration();
         List<List<Trade>> pathList = pg.FindTrades(inventory, allTradesList, Criteria.TargetItemName, Criteria.SearchDepth);       

@@ -13,10 +13,10 @@ namespace TradesAlg
         {
             "scrap"
         };
-        public const string TargetItemName = "pistol-bullet";
-        public const int TargetItemAmount = 24;
+        public const string TargetItemName = "crossbow";
+        public const int TargetItemAmount = 4;
 
-        public const int WorkBenchLevel = 1;
+        public const int WorkBenchLevel = 3;
         public const bool SafeZoneRecycler = true;
         public const bool OutPostTradesEnabled = true;
         public const bool BanditTradesEnabled = true;
@@ -29,7 +29,13 @@ namespace TradesAlg
 
         // operation & debugging settings
         public const int SearchDepth = 4;
-        public const int MaxOptionsListed = 100;
+        public const int MaxOptionsListed = 1;
         public const bool LoggingEnabled = false;
+
+        // item valuation settings
+        public const bool SkipPreviouslyGeneratedValues = true;
+        public const string ItemValueBaseline = "scrap";
+        public const int ItemValueTargetQuantity = 100;
+        public const string ItemValuesJSON = "itemValues.json";
     }
 }

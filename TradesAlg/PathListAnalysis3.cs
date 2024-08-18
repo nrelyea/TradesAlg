@@ -26,7 +26,8 @@ namespace TradesAlg
             }
 
             // Sort options by ascending cost (cheapest first)
-            optionPackageList.Sort((x, y) => x.IsCheaperThan(y) ? -1 : (y.IsCheaperThan(x) ? 1 : 0));
+            //optionPackageList.Sort((x, y) => x.IsCheaperThan(y) ? -1 : (y.IsCheaperThan(x) ? 1 : 0));
+            optionPackageList.Sort((x, y) => x.IsCheaperThan(y) ? -1 : 1 );
 
             return optionPackageList;
         }

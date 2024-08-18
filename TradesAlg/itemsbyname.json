@@ -3745,7 +3745,7 @@
                 "craftCost": [
                     {
                         "name": "stones",
-                        "amount": 3
+                        "amount": 3000
                     },
                     {
                         "name": "gears",
@@ -3756,16 +3756,24 @@
         },
         "recycleData": {
             "recycleYieldrad": [
-                {
-                    "name": "gears",
-                    "amount": 3
-                }
+              {
+                "name": "gears",
+                "amount": 3
+              },
+              {
+                "name": "stones",
+                "amount": 1800
+              }
             ],
             "recycleYieldsafe": [
-                {
-                    "name": "gears",
-                    "amount": 2
-                }
+              {
+                "name": "gears",
+                "amount": 2
+              },
+              {
+                "name": "stones",
+                "amount": 1200
+              }
             ]
         }
     },
@@ -3789,7 +3797,7 @@
                 "craftCost": [
                     {
                         "name": "stones",
-                        "amount": 1
+                        "amount": 1500
                     }
                 ]
             }
@@ -3829,7 +3837,7 @@
                 "craftCost": [
                     {
                         "name": "wood",
-                        "amount": 3
+                        "amount": 3000
                     },
                     {
                         "name": "gears",
@@ -3843,12 +3851,20 @@
                 {
                     "name": "gears",
                     "amount": 2
+                },
+                {
+                    "name": "wood",
+                    "amount": 1800
                 }
             ],
             "recycleYieldsafe": [
                 {
                     "name": "gears",
                     "amount": 1
+                },
+                {
+                    "name": "wood",
+                    "amount": 1200
                 }
             ]
         }
@@ -3873,7 +3889,7 @@
                 "craftCost": [
                     {
                         "name": "wood",
-                        "amount": 1
+                        "amount": 1500
                     }
                 ]
             }
@@ -4863,7 +4879,7 @@
                 "craftCost": [
                     {
                         "name": "wood",
-                        "amount": 1
+                        "amount": 1000
                     }
                 ]
             }
@@ -5265,12 +5281,20 @@
                 {
                     "name": "wood",
                     "amount": 180
+                },
+                {
+                    "name": "rope",
+                    "amount": 2
                 }
             ],
             "recycleYieldsafe": [
                 {
                     "name": "wood",
                     "amount": 120
+                },
+                {
+                    "name": "rope",
+                    "amount": 2
                 }
             ]
         }

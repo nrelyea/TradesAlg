@@ -56,8 +56,24 @@ namespace TradesAlg
                     //Console.WriteLine($"This option is cheaper than the other ({cost.Value} < {otherOption.UpfrontCost[cost.Key]})");
                     return true;
                 }
+                else if(otherOption.UpfrontCost.ContainsKey(cost.Key) && cost.Value > otherOption.UpfrontCost[cost.Key])
+                {
+                    return false;
+                }
             }
-            return false;
+            
+            // Tiebreaker: if costs are equal, sort by optionpackage hash code
+            return this.GetHashCode() < otherOption.GetHashCode();
+        }
+
+        public override int GetHashCode()
+        {
+            int hash = Remainder.GetHashCode();
+            foreach (Trade trade in Path)
+            {
+                hash = HashCode.Combine(hash, trade.GetHashCode());
+            }
+            return hash;
         }
     }
 }
