@@ -32,7 +32,8 @@ class Program
 
 
         // Generate / Re-Generate All Item Values
-        //ItemValueGeneration ivg = new ItemValueGeneration(programDir, allTradesList);
+        ItemValueGeneration ivg = new ItemValueGeneration(programDir, allTradesList);
+        //ivg.GenerateAllItemValues();                                                  // UN-COMMENT THIS LINE TO RE-GENERATE ALL ITEM VALUES
 
 
         // find all possible trades!
@@ -56,7 +57,7 @@ class Program
 
         // Determine full option packages with upfront costs of each trade path as a dictionary of cost items and their amount
         Console.WriteLine("Calculating upfront costs for all valid options...");
-        PathListAnalysis3 pla3 = new PathListAnalysis3();
+        PathListAnalysis3 pla3 = new PathListAnalysis3(ivg);
         List<OptionPackage> optionPackageList = pla3.AllOptionPackages(inventory, pathList, Criteria.TargetItemName, Criteria.TargetItemAmount);
 
         pla3.PrintOptionPackageList(optionPackageList, Criteria.MaxOptionsListed);

@@ -11,7 +11,12 @@ namespace TradesAlg
 {
     public class PathListAnalysis3
     {
-        public PathListAnalysis3() { }
+        private ItemValueGeneration ItemValueGenerationHandler;
+
+        public PathListAnalysis3(ItemValueGeneration ivg)
+        {
+            ItemValueGenerationHandler = ivg;
+        }
 
         public List<OptionPackage> AllOptionPackages(List<Item> inventory, List<List<Trade>> pathList, string targetName, int targetAmount)
         {
@@ -25,11 +30,58 @@ namespace TradesAlg
                 if(optionPackage != null) optionPackageList.Add(optionPackage);
             }
 
+            UpdateAllOptionPackageUpfrontCostTotals(ref optionPackageList);
+
             // Sort options by ascending cost (cheapest first)
             //optionPackageList.Sort((x, y) => x.IsCheaperThan(y) ? -1 : (y.IsCheaperThan(x) ? 1 : 0));
             optionPackageList.Sort((x, y) => x.IsCheaperThan(y) ? -1 : 1 );
 
             return optionPackageList;
+        }
+
+        private void UpdateAllOptionPackageUpfrontCostTotals(ref List<OptionPackage> optionPackageList)
+        {
+            Dictionary<string, double> itemValues = ItemValueGenerationHandler.LoadItemValues();
+            //Console.WriteLine($"{itemValues.Count} items loaded");
+
+            foreach(OptionPackage optionPackage in optionPackageList)
+            {
+                optionPackage.UpfrontCostTotal = CalculateUpfrontCostTotal(optionPackage, itemValues);
+                optionPackage.RemainderTotal = CalculateRemainderTotal(optionPackage, itemValues);
+                //Console.WriteLine($"Totals generated -> Upfront: {optionPackage.UpfrontCostTotal}   Remainder: {optionPackage.RemainderTotal}");
+            }
+        }
+
+        private double CalculateUpfrontCostTotal(OptionPackage option, Dictionary<string, double> itemValues)
+        {
+            double costTotal = 0;
+
+            foreach(KeyValuePair<string, double> upfrontPair in option.UpfrontCost)
+            {
+                if (itemValues.ContainsKey(upfrontPair.Key))
+                {
+                    // add (item quantity * item value) to the upfront cost total
+                    costTotal += (upfrontPair.Value * itemValues[upfrontPair.Key]);
+                }
+            }
+
+            return costTotal;
+        }
+
+        private double CalculateRemainderTotal(OptionPackage option, Dictionary<string, double> itemValues)
+        {
+            double remainderTotal = 0;
+
+            foreach (KeyValuePair<string, double> upfrontPair in option.Remainder)
+            {
+                if (itemValues.ContainsKey(upfrontPair.Key))
+                {
+                    // add (item quantity * item value) to the upfront cost total
+                    remainderTotal += (upfrontPair.Value * itemValues[upfrontPair.Key]);
+                }
+            }
+
+            return remainderTotal;
         }
 
         private OptionPackage GenerateOptionPackage(List<Item> inventory, List<Trade> path, string targetName, int targetAmount, bool logging)
@@ -324,6 +376,8 @@ namespace TradesAlg
                 {
                     Console.WriteLine($" - {costPair.Value}x {costPair.Key}");
                 }
+                //Console.WriteLine($"Upfront VALUE: {optionPackageList[i].UpfrontCostTotal}");
+                //Console.WriteLine($"Remainder VALUE: {optionPackageList[i].RemainderTotal}");
                 optionPackageList[i].PrintOptionSummary();
             }
         }

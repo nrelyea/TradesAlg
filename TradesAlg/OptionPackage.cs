@@ -9,9 +9,12 @@ namespace TradesAlg
     public class OptionPackage
     {
         public Dictionary<string, double> UpfrontCost;
+        public double UpfrontCostTotal;
+        public Dictionary<string, double> Remainder;
+        public double RemainderTotal;
+
         public List<Trade> Path;
         public Dictionary<Trade, int> TradeCounts;
-        public Dictionary<string, double> Remainder;
         public bool ContainsProbability;
 
 
@@ -49,20 +52,26 @@ namespace TradesAlg
 
         public bool IsCheaperThan(OptionPackage otherOption)
         {
-            foreach(KeyValuePair<string,double> cost in UpfrontCost)
+            if(UpfrontCostTotal < otherOption.UpfrontCostTotal)
             {
-                if(otherOption.UpfrontCost.ContainsKey(cost.Key) && cost.Value < otherOption.UpfrontCost[cost.Key])
-                {
-                    //Console.WriteLine($"This option is cheaper than the other ({cost.Value} < {otherOption.UpfrontCost[cost.Key]})");
-                    return true;
-                }
-                else if(otherOption.UpfrontCost.ContainsKey(cost.Key) && cost.Value > otherOption.UpfrontCost[cost.Key])
-                {
-                    return false;
-                }
+                return true;
             }
-            
-            // Tiebreaker: if costs are equal, sort by optionpackage hash code
+            else if(UpfrontCostTotal > otherOption.UpfrontCostTotal)
+            {
+                return false;
+            }
+
+            // 1st Tiebreaker: if costs are equal, the larger remainder is considered cheaper option
+            if (RemainderTotal > otherOption.RemainderTotal)
+            {
+                return true;
+            }
+            else if (RemainderTotal < otherOption.RemainderTotal)
+            {
+                return false;
+            }
+
+            // 2nd Tiebreaker: if remainders are equal, sort by optionpackage hash code
             return this.GetHashCode() < otherOption.GetHashCode();
         }
 

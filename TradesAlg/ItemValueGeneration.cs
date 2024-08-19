@@ -10,26 +10,35 @@ namespace TradesAlg
 {
     public class ItemValueGeneration
     {
+        private string ProgramDir;
+        private List<Trade> TradesList;
+        
         private string ItemValuesJSONPath;
         private string ItemDataPath;
         private Dictionary<string, double> ItemValues;
 
         public ItemValueGeneration(string programDir, List<Trade> tradesList)
         {
-            ItemValuesJSONPath = Path.Combine(programDir, Criteria.ItemValuesJSON);
-            ItemDataPath = Path.Combine(programDir, Criteria.ItemsJSON);
+            ProgramDir = programDir;
+            TradesList = tradesList;
 
+            ItemValuesJSONPath = Path.Combine(ProgramDir, Criteria.ItemValuesJSON);
+            ItemDataPath = Path.Combine(ProgramDir, Criteria.ItemsJSON);
+        }
+
+        public void GenerateAllItemValues()
+        {            
             ItemValues = LoadItemValues();
 
             // get item names to have value calculated
             List<string> allItemNames = GetItemsForEvaluation();
 
             // determine and update item value for each item
-            for(int i = 0; i < allItemNames.Count; i++)
+            for (int i = 0; i < allItemNames.Count; i++)
             {
                 string itemName = allItemNames[i];
-                double itemValue = CalculateItemValue(itemName, i+1, allItemNames.Count, tradesList);
-                
+                double itemValue = CalculateItemValue(itemName, i + 1, allItemNames.Count, TradesList);
+
                 SaveItemValue(itemName, itemValue);
             }
 
@@ -62,12 +71,12 @@ namespace TradesAlg
 
             if (pathList.Count == 0)
             {
-                //Console.WriteLine($"No path(s) exist to obtain {itemName} from {Criteria.ItemValueBaseline}, saving value as -1");
-                return -1;
+                //Console.WriteLine($"No path(s) exist to obtain {itemName} from {Criteria.ItemValueBaseline}, saving value as 0.0");
+                return 0;
             }
           
             // calculate all upfront costs possible for this item using baseline item to determine cheapest path
-            PathListAnalysis3 pla3 = new PathListAnalysis3();
+            PathListAnalysis3 pla3 = new PathListAnalysis3(this);
             List<OptionPackage> optionPackageList = pla3.AllOptionPackages(baseLineInv, pathList, itemName, Criteria.ItemValueTargetQuantity);
 
             // return cheapest upfront cost as a fraction of ItemValueTargetQuantity to form a more general cost / value basis for this item
@@ -93,7 +102,7 @@ namespace TradesAlg
             return pathList;
         }
 
-        private Dictionary<string, double> LoadItemValues()
+        public Dictionary<string, double> LoadItemValues()
         {
             if (File.Exists(ItemValuesJSONPath))
             {

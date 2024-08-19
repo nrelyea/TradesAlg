@@ -11,7 +11,9 @@ namespace TradesAlg
         // user criteria for search
         public static readonly List<string> InventoryItemNames = new List<string>
         {
-            "scrap"
+            "scrap",
+            "bucket-helmet",
+            "jacket"
         };
         public const string TargetItemName = "crossbow";
         public const int TargetItemAmount = 4;
@@ -29,7 +31,7 @@ namespace TradesAlg
 
         // operation & debugging settings
         public const int SearchDepth = 4;
-        public const int MaxOptionsListed = 1;
+        public const int MaxOptionsListed = 100;
         public const bool LoggingEnabled = false;
 
         // item valuation settings
